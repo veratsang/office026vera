@@ -1,0 +1,309 @@
+diff --git a/artifacts/office026vera-portfolio/public/office-interactions-demo.html b/artifacts/office026vera-portfolio/public/office-interactions-demo.html
+new file mode 100644
+index 0000000..84a37ce
+--- /dev/null
++++ b/artifacts/office026vera-portfolio/public/office-interactions-demo.html
+@@ -0,0 +1,41 @@
++<!doctype html>
++<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>office026vera · 交互验收</title>
++<style>
++*{box-sizing:border-box}body{margin:0;background:#f6f7f7;color:#29292b;font:14px/1.65 system-ui,sans-serif}main{max-width:1500px;margin:auto;padding:24px}h1{font:400 28px Georgia,serif;margin:0 0 8px}p{margin:8px 0;color:#696368}.controls{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:18px 0}button,select{font:inherit;color:#805d6c;background:none;border:1px solid #d5d2d3;padding:7px 12px;cursor:pointer}button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid #b88494;outline-offset:3px}button[aria-pressed=true]{border-color:#986c7a;color:#29292b}label{display:inline-flex;gap:7px;align-items:center}.viewport{border:1px solid #d5d2d3;overflow:hidden}iframe{border:0;display:block;transform-origin:top left}output{display:block;white-space:pre-wrap;padding:12px 0;font:11px/1.7 monospace;color:#756b71}pre{max-height:280px;overflow:auto;font:11px/1.6 monospace}summary{cursor:pointer;color:#986c7a}a{color:#986c7a;text-underline-offset:4px}
++</style></head><body><main>
++<h1>office026vera / Office Interaction System</h1>
++<p>这是验收工具，内部加载当前真实网站。请悬停、点击或用 Tab 聚焦；下方记录实际 CSS 动画帧，不是截图模拟。</p>
++<nav class="controls" aria-label="动画场景">
++<button data-scene="about" aria-pressed="true">01 工牌抽取</button><button data-scene="project" aria-pressed="false">02 键帽按压</button><button data-scene="research" aria-pressed="false">03 小猫推车</button><button data-scene="formula" aria-pressed="false">04 实验显现</button><button data-scene="note" aria-pressed="false">05 便利贴掀角</button><button data-scene="file" aria-pressed="false">06 打开档案</button>
++</nav>
++<div class="controls"><label>视口 <select id="size"><option>1440 × 900</option><option>1920 × 1080</option><option>1366 × 768</option><option>1024 × 768</option><option>768 × 1024</option><option>430 × 932</option><option>390 × 844</option><option>375 × 667</option></select></label><label><input id="reduced" type="checkbox">模拟减少动态</label><label><input id="no-observer" type="checkbox">模拟无 Intersection Observer</label><button id="replay">重新访问 / 重播</button><button id="save">保存实测记录</button></div>
++<p id="instruction">悬停任意工牌，或用 Tab 聚焦；点击仍直接进入原详情页。</p>
++<div class="viewport" id="viewport"><iframe id="site" title="当前作品集的真实交互"></iframe></div>
++<output id="state" aria-live="polite">正在载入…</output>
++<details><summary>查看实测帧数据与环境信息</summary><pre id="trace">尚未触发动画</pre></details>
++<p>演示中的减少动态与缺少 Observer 选项只作用于本验收框架，不保存设置、不改变主站。主站正常读取系统偏好。</p>
++<a href="./">返回作品集 ↗</a>
++</main><script type="module">
++const scenes={about:['/about','.about-badge-grid','悬停任意工牌，或用 Tab 聚焦；点击仍直接进入原详情页。'],project:['/project','.project-keycap-press-area','悬停 PROJECT 键帽区域，整组轻压；不新增导航或音效。'],research:['/research/index','.research-index-entries','悬停研究目录条目或聚焦入口，观察对应小猫向右移动并返回。'],formula:['/lab/001',null,'向下滚动：每组首次进入视口时显现。向上返回不会重新隐藏。'],note:['/lab/index','.office-lab-index-entry','悬停或聚焦 LAB_003 / 004；便利贴与 HTML 状态文字一起轻微倾斜。'],file:['/about/skills',null,'点击“重新访问 / 重播”观察编号保持静止、标题先出现、正文随后出现。']};
++let scene='about',records={},metrics={},generation=0,loadRequest=0,timer,cleanup=()=>{};
++const frame=document.querySelector('#site'),state=document.querySelector('#state'),trace=document.querySelector('#trace');
++function boot(route,reduced,noObserver){
++ window.location.hash=route;
++ if(reduced){const original=window.matchMedia.bind(window);window.matchMedia=query=>query.includes('prefers-reduced-motion')?{matches:true,media:query,onchange:null,addListener(){},removeListener(){},addEventListener(){},removeEventListener(){},dispatchEvent(){return true}}:original(query);}
++ if(noObserver)Object.defineProperty(window,'IntersectionObserver',{value:undefined,configurable:true});
++}
++function fit(){const [width,height]=document.querySelector('#size').value.split(' × ').map(Number);frame.width=width;frame.height=height;const scale=Math.min(1,document.querySelector('#viewport').clientWidth/width);frame.style.transform=`scale(${scale})`;document.querySelector('#viewport').style.height=`${height*scale}px`;}
++function inspect(d,w){
++ const serial=++generation;let cls=0,observer,active=new WeakSet();records={};metrics={};trace.textContent='尚未触发动画';
++ function sample(el,label){if(!el||active.has(el))return;active.add(el);const start=w.performance.now(),frames=[];function tick(t){if(serial!==generation)return;const c=w.getComputedStyle(el);frames.push({ms:Math.round(t-start),opacity:Number(c.opacity),transform:c.transform,animations:el.getAnimations().map(a=>({name:a.animationName||'transition',state:a.playState,time:Math.round(a.currentTime||0)}))});records[label]=frames;trace.textContent=JSON.stringify({metrics,records},null,2);if(t-start<550&&frames.length<40)w.requestAnimationFrame(tick);else active.delete(el)}w.requestAnimationFrame(tick)}
++ function interaction(e){const el=e.target.closest?.('.about-id-card,.project-keycap-press-area,.research-index-row,.office-lab-index-entry');if(!el)return;const target=el.matches('.project-keycap-press-area')?el.parentElement.querySelector('img'):el.matches('.research-index-row')?el.querySelector('.research-index-cat'):el.matches('.office-lab-index-entry')?el.querySelector('.office-note'):el;sample(target,e.type+' / '+el.className);}
++ function animation(e){if(e.animationName.startsWith('office-'))sample(e.target,e.animationName+' / '+e.target.className);}
++ d.addEventListener('transitionrun',interaction,true);d.addEventListener('pointerover',interaction);d.addEventListener('focusin',interaction);d.addEventListener('animationstart',animation,true);
++ try{observer=new w.PerformanceObserver(list=>{for(const e of list.getEntries())if(!e.hadRecentInput)cls+=e.value});observer.observe({type:'layout-shift',buffered:false});}catch{}
++ timer=setInterval(()=>{const root=d.documentElement;metrics={scene,route:w.location.hash,viewport:[w.innerWidth,w.innerHeight],reducedQuery:w.matchMedia('(prefers-reduced-motion: reduce)').matches,reducedClass:root.classList.contains('office-motion-reduced'),observerAvailable:typeof w.IntersectionObserver!=='undefined',horizontalOverflow:root.scrollWidth>root.clientWidth,pendingSteps:d.querySelectorAll('[data-office-reveal="pending"]').length,visibleSteps:d.querySelectorAll('[data-office-reveal="visible"]').length,layoutShift:Number(cls.toFixed(5)),recordedEffects:Object.keys(records)};state.textContent=JSON.stringify(metrics,null,2);},180);
++ cleanup=()=>{clearInterval(timer);observer?.disconnect();d.removeEventListener('transitionrun',interaction,true);d.removeEventListener('pointerover',interaction);d.removeEventListener('focusin',interaction);d.removeEventListener('animationstart',animation,true);};
++ const wait=new MutationObserver(()=>{if(d.querySelector('main')){wait.disconnect();const target=scenes[scene][1];if(target)w.requestAnimationFrame(()=>d.querySelector(target)?.scrollIntoView({block:'center'}));}});wait.observe(d,{childList:true,subtree:true});if(d.querySelector('main')){wait.disconnect();const target=scenes[scene][1];if(target)d.querySelector(target)?.scrollIntoView({block:'center'});}
++}
++async function load(){const request=++loadRequest;cleanup();++generation;const [route,,instruction]=scenes[scene];document.querySelector('#instruction').textContent=instruction;state.textContent='正在载入…';document.querySelectorAll('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===scene)));fit();const html=await fetch('./index.html',{cache:'no-store'}).then(r=>r.text());if(request!==loadRequest)return;const base=new URL('./',location.href).href;const setup=`<base href="${base}"><script>(${boot.toString()})(${JSON.stringify(route)},${document.querySelector('#reduced').checked},${document.querySelector('#no-observer').checked})<\/script>`;frame.onload=()=>{if(request===loadRequest)inspect(frame.contentDocument,frame.contentWindow);};frame.srcdoc=html.replace('<head>','<head>'+setup);}
++document.querySelectorAll('[data-scene]').forEach(b=>b.onclick=()=>{scene=b.dataset.scene;load()});document.querySelector('#replay').onclick=load;document.querySelector('#size').onchange=load;document.querySelector('#reduced').onchange=load;document.querySelector('#no-observer').onchange=load;window.addEventListener('resize',fit);document.querySelector('#save').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({metrics,records},null,2)],{type:'application/json'}));a.download='office-motion-'+scene+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};load();
++</script></body></html>
+diff --git a/artifacts/office026vera-portfolio/src/App.tsx b/artifacts/office026vera-portfolio/src/App.tsx
+index cd7f1fc..f6ed48a 100644
+--- a/artifacts/office026vera-portfolio/src/App.tsx
++++ b/artifacts/office026vera-portfolio/src/App.tsx
+@@ -7,6 +7,7 @@ import { ResearchArchive, ResearchDetail } from '@/pages/research';
+ import { LabArchive, LabDetail } from '@/pages/lab';
+ import { ProjectArchive, ProjectDetail } from '@/pages/projects';
+ import NotFound from '@/pages/not-found';
++import { OfficeMotionPreference } from '@/components/office-motion-preference';
+ import { OfficeObject } from '@/components/office-stationery';
+ import bowKeys from '@assets/礼盒钥匙最终修正图_1792483661738.png';
+ import aboutCoverReference from '@assets/Live_20261018183713644_1792569987645.jpeg';
+@@ -204,7 +205,7 @@ function AboutDetailFrame({
+   return (
+     <>
+       <SiteHeader />
+-      <main className="interior-page about-detail">
++      <main className="interior-page about-detail office-file">
+         <div className="about-detail-backline">
+           <Link href="/about" data-testid="link-about-detail-back">← About archive</Link>
+           <span>ABOUT_{number}</span>
+@@ -493,6 +494,7 @@ function App() {
+     <QueryClientProvider client={queryClient}>
+       <TooltipProvider>
+         <WouterRouter hook={useHashLocation}>
++          <OfficeMotionPreference/>
+           <Router />
+           <RouteTransition />
+         </WouterRouter>
+diff --git a/artifacts/office026vera-portfolio/src/components/office-motion-preference.tsx b/artifacts/office026vera-portfolio/src/components/office-motion-preference.tsx
+new file mode 100644
+index 0000000..021dfd8
+--- /dev/null
++++ b/artifacts/office026vera-portfolio/src/components/office-motion-preference.tsx
+@@ -0,0 +1,18 @@
++import { useLayoutEffect } from 'react';
++
++/** Mirror the OS preference for both CSS and viewport effects, without a UI layer. */
++export function OfficeMotionPreference() {
++  useLayoutEffect(() => {
++    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
++    const apply = () => document.documentElement.classList.toggle('office-motion-reduced', preference.matches);
++    apply();
++    if (preference.addEventListener) preference.addEventListener('change', apply);
++    else preference.addListener(apply);
++    return () => {
++      if (preference.removeEventListener) preference.removeEventListener('change', apply);
++      else preference.removeListener(apply);
++      document.documentElement.classList.remove('office-motion-reduced');
++    };
++  }, []);
++  return null;
++}
+diff --git a/artifacts/office026vera-portfolio/src/hooks/use-office-reveal.ts b/artifacts/office026vera-portfolio/src/hooks/use-office-reveal.ts
+new file mode 100644
+index 0000000..19b66f5
+--- /dev/null
++++ b/artifacts/office026vera-portfolio/src/hooks/use-office-reveal.ts
+@@ -0,0 +1,58 @@
++import { useLayoutEffect, useRef } from 'react';
++
++/** Progressive enhancement: no observer or reduced motion means visible content. */
++export function useOfficeReveal() {
++  const ref = useRef<HTMLElement>(null);
++  useLayoutEffect(() => {
++    const root = ref.current;
++    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
++    if (!root || preference.matches || typeof IntersectionObserver === 'undefined') return;
++    const steps = Array.from(root.querySelectorAll<HTMLElement>(
++      ':scope > .lab-formula-group, :scope > .lab-formula-operator, :scope > .lab-formula-folder',
++    ));
++    let observer: IntersectionObserver;
++    const show = (step: HTMLElement, immediate = false) => {
++      if (step.dataset.officeReveal !== 'pending') return;
++      step.classList.remove('office-step-pending');
++      step.dataset.officeReveal = 'visible';
++      if (!immediate) step.classList.add('office-step-visible');
++      observer.unobserve(step);
++    };
++    observer = new IntersectionObserver(entries => {
++      for (const entry of entries) {
++        if (entry.isIntersecting || entry.boundingClientRect.bottom <= 0) show(entry.target as HTMLElement);
++      }
++      // Catch steps passed by a fast scroll without a persistent scroll listener.
++      for (const step of steps) {
++        if (step.dataset.officeReveal === 'pending' && step.getBoundingClientRect().bottom <= 0) show(step, true);
++      }
++    }, { threshold: 0 });
++    steps.forEach((step, index) => {
++      step.style.setProperty('--office-step-delay', `${Math.min(index * 30, 120)}ms`);
++      step.dataset.officeReveal = 'pending';
++      step.classList.add('office-step-pending');
++      observer.observe(step);
++    });
++    const revealAll = () => steps.forEach(step => show(step, true));
++    const onPreference = () => { if (preference.matches) revealAll(); };
++    const onFocus = (event: FocusEvent) => {
++      const step = (event.target as Element).closest<HTMLElement>('[data-office-reveal]');
++      if (step) show(step, true);
++    };
++    if (preference.addEventListener) preference.addEventListener('change', onPreference);
++    else preference.addListener(onPreference);
++    root.addEventListener('focusin', onFocus);
++    return () => {
++      observer.disconnect();
++      root.removeEventListener('focusin', onFocus);
++      if (preference.removeEventListener) preference.removeEventListener('change', onPreference);
++      else preference.removeListener(onPreference);
++      for (const step of steps) {
++        step.classList.remove('office-step-pending', 'office-step-visible');
++        step.style.removeProperty('--office-step-delay');
++        delete step.dataset.officeReveal;
++      }
++    };
++  }, []);
++  return ref;
++}
+diff --git a/artifacts/office026vera-portfolio/src/main.tsx b/artifacts/office026vera-portfolio/src/main.tsx
+index 00743a3..c8fb5e7 100644
+--- a/artifacts/office026vera-portfolio/src/main.tsx
++++ b/artifacts/office026vera-portfolio/src/main.tsx
+@@ -4,6 +4,7 @@ import App from './App';
+ import { ErrorBoundary } from '@/components/error-boundary';
+ 
+ import './index.css';
++import './office-interactions.css';
+ 
+ createRoot(document.getElementById('root')!, {
+   // Keeps caught errors off reportError(), which would raise the dev overlay.
+diff --git a/artifacts/office026vera-portfolio/src/office-interactions.css b/artifacts/office026vera-portfolio/src/office-interactions.css
+new file mode 100644
+index 0000000..faec368
+--- /dev/null
++++ b/artifacts/office026vera-portfolio/src/office-interactions.css
+@@ -0,0 +1,63 @@
++/* Office Interaction System: transform/opacity only; no layout or asset changes. */
++:root {
++  --office-ease-out:cubic-bezier(.2,.7,.2,1);
++  --office-badge-duration:260ms;
++  --office-key-duration:180ms;
++  --office-cat-duration:350ms;
++  --office-note-duration:260ms;
++  --office-reveal-duration:400ms;
++  --office-file-duration:350ms;
++}
++.about-id-card { transition:transform var(--office-badge-duration) var(--office-ease-out); }
++.about-id-card:hover,.about-id-card:focus-visible { transform:none; }
++.about-id-card:active { transform:scale(.99); transition-duration:90ms; }
++.project-archive .about-cover-visual { position:relative; }
++.project-archive .about-cover-visual > img { transition:transform var(--office-key-duration) var(--office-ease-out); transform-origin:center; }
++.project-keycap-press-area { position:absolute; inset:25% 10% 24%; }
++.research-index-cat { transition:transform var(--office-cat-duration) var(--office-ease-out); transform-origin:50% 90%; }
++.office-note { transition:transform var(--office-note-duration) var(--office-ease-out); }
++@media(min-width:761px) and (hover:hover) and (pointer:fine) {
++  .about-id-card:hover,.about-id-card:focus-visible { transform:translateY(-7px) rotate(-.5deg); }
++  .about-id-card:active { transform:translateY(-9px) scale(1.005); transition-duration:90ms; }
++  .project-archive .about-cover-visual:has(.project-keycap-press-area:hover) > img { transform:translateY(2.5px) scale(.99); }
++  .research-index-row:hover .research-index-cat,.research-index-row:focus-within .research-index-cat { transform:translateX(10px) rotate(.6deg); }
++  .research-index-row:hover .research-open,.research-index-row:focus-within .research-open { color:var(--ink); }
++  .office-lab-index-entry:hover .office-note-003,.office-lab-index-entry:focus-visible .office-note-003 { transform:translateY(-2px) rotate(-3deg); }
++  .office-lab-index-entry:hover .office-note-004,.office-lab-index-entry:focus-visible .office-note-004 { transform:translateY(-2px) rotate(6deg); }
++}
++@media(prefers-reduced-motion:reduce) {
++  .about-id-card,.about-id-card:hover,.about-id-card:focus-visible,.about-id-card:active { transform:none !important; transition:none !important; }
++  .project-archive .about-cover-visual > img,.research-index-cat { transform:none !important; transition:none !important; }
++  .office-note { transition:none !important; }
++  .office-note-003 { transform:rotate(-5deg) !important; }
++  .office-note-004 { transform:rotate(4deg) !important; }
++}
++
++.office-step-pending { opacity:0; transform:translateY(10px); }
++.office-step-visible { animation:office-step-enter var(--office-reveal-duration) var(--office-ease-out) var(--office-step-delay,0ms) both; }
++@keyframes office-step-enter { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
++@media(prefers-reduced-motion:reduce) {
++  .office-step-pending,.office-step-visible { opacity:1 !important; transform:none !important; animation:none !important; }
++}
++
++/* Number, classification and rules stay still; title then body settle within 430ms. */
++.office-file > .page-masthead h1,
++.office-file > .page-masthead > .page-description { animation:office-file-open var(--office-file-duration) var(--office-ease-out) both; }
++.office-file > :not(.about-detail-backline):not(.page-masthead):not(.page-rule):not(.page-footer):not(.lab-formula) { animation:office-file-open var(--office-file-duration) var(--office-ease-out) 80ms both; }
++@keyframes office-file-open { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
++/* The explicit class also allows an acceptance harness to simulate the OS query. */
++.office-motion-reduced .about-id-card,
++.office-motion-reduced .project-archive .about-cover-visual > img,
++.office-motion-reduced .research-index-cat { transform:none !important; transition:none !important; }
++.office-motion-reduced .office-note { transition:none !important; }
++.office-motion-reduced .office-note-003 { transform:rotate(-5deg) !important; }
++.office-motion-reduced .office-note-004 { transform:rotate(4deg) !important; }
++.office-motion-reduced .office-step-pending,.office-motion-reduced .office-step-visible,
++.office-motion-reduced .office-file > .page-masthead h1,
++.office-motion-reduced .office-file > .page-masthead > .page-description,
++.office-motion-reduced .office-file > :not(.about-detail-backline):not(.page-masthead):not(.page-rule):not(.page-footer):not(.lab-formula) { animation:none !important; opacity:1 !important; transform:none !important; }
++@media(prefers-reduced-motion:reduce) {
++ .office-file > .page-masthead h1,
++ .office-file > .page-masthead > .page-description,
++ .office-file > :not(.about-detail-backline):not(.page-masthead):not(.page-rule):not(.page-footer):not(.lab-formula) { animation:none !important; opacity:1 !important; transform:none !important; }
++}
+diff --git a/artifacts/office026vera-portfolio/src/pages/lab.tsx b/artifacts/office026vera-portfolio/src/pages/lab.tsx
+index 6f170c3..d69e138 100644
+--- a/artifacts/office026vera-portfolio/src/pages/lab.tsx
++++ b/artifacts/office026vera-portfolio/src/pages/lab.tsx
+@@ -5,6 +5,7 @@ import formulaReference from '@/assets/lab/formula-wide-reference.jpg';
+ import plantOutput from '@/assets/lab/plant-real-site.jpg';
+ import './lab.css';
+ import { OfficeNote } from '@/components/office-stationery';
++import { useOfficeReveal } from '@/hooks/use-office-reveal';
+ 
+ const experiments = [
+   {id:'001',title:'Interactive Plant-Watering Website',zh:'一日水长',status:'COMPLETED'},
+@@ -39,7 +40,7 @@ function FormulaElement({kind}:{kind:'idea'|'tube'|'flask'|'folder'}) {
+   const boxes={idea:'690 110 350 215',tube:'1092 342 70 232',flask:'904 606 108 178',folder:'918 872 214 200'};
+   return <svg className="lab-formula-object" viewBox={boxes[kind]} role="img" aria-label={kind==='idea'?'原始蓝色手绘涂鸦':kind==='tube'?'完整透明试管及原始编号②':kind==='flask'?'完整透明烧瓶':'原始蓝色花纹文件夹'}><defs><mask id={`formula-mask-${kind}`} maskUnits="userSpaceOnUse" x="0" y="0" width="2048" height="1151"><rect width="2048" height="1151" fill="white"/>{kind==='idea'&&<><rect x="0" y="0" width="711" height="230" fill="black"/><rect x="990" y="305" width="80" height="80" fill="black"/></>}{kind==='flask'&&<rect x="0" y="0" width="930" height="665" fill="black"/>}</mask></defs><image href={formulaReference} width="2048" height="1151" mask={`url(#formula-mask-${kind})`}/></svg>;
+ }
+-function ExperimentFormula() {return <section className="lab-formula" aria-label="一日水长实验过程拼贴">
++function ExperimentFormula() {const formulaRef = useOfficeReveal(); return <section ref={formulaRef} className="lab-formula" aria-label="一日水长实验过程拼贴">
+   <div className="lab-formula-group lab-formula-group-idea">
+     <figure className="lab-formula-idea"><span className="lab-formula-number">①</span><FormulaElement kind="idea"/></figure>
+     <div className="about-capability-content lab-formula-copy"><p className="about-tool-list">01 / IDEA</p><p><strong>问题与需求：</strong>展位设置真实植物，希望观众不只是观看，能够通过实际浇水参与互动；同时需要记录线下互动行为并方便项目方远程查看。</p></div>
+@@ -84,7 +85,7 @@ function KoreanExperiment() {return <div className="about-capabilities">
+ export function LabDetail({id}:{id:LabId}) {
+   useEffect(()=>{window.scrollTo({top:0,behavior:'instant'});},[id]);
+   const e=experiments.find(e=>e.id===id)!;
+-  return <main className="interior-page about-detail lab-detail">
++  return <main className="interior-page about-detail lab-detail office-file">
+     <div className="about-detail-backline"><Link href="/lab/index">← LAB ARCHIVE</Link><span>LAB_{id}</span></div>
+     <div className="page-masthead about-detail-masthead"><div><p className="page-eyebrow"><span>05</span>DIGITAL / EXPERIMENTS</p><h1>{e.title.toUpperCase()}</h1></div><p className="page-description">{e.zh}</p></div>
+     <div className="page-rule"><span>{e.status}</span><span>File {id}</span></div>
+diff --git a/artifacts/office026vera-portfolio/src/pages/projects.tsx b/artifacts/office026vera-portfolio/src/pages/projects.tsx
+index f016e71..1602ec5 100644
+--- a/artifacts/office026vera-portfolio/src/pages/projects.tsx
++++ b/artifacts/office026vera-portfolio/src/pages/projects.tsx
+@@ -25,6 +25,7 @@ export function ProjectArchive() {
+     <div className="about-archive-layout">
+       <figure className="about-cover-visual" aria-label="Project Cover">
+         <img src={keycaps} alt="office026 / 02 — PROJECT 白色立体键帽封面 / selected works" />
++        <span className="project-keycap-press-area" aria-hidden="true"/>
+       </figure>
+       <section id="project-index" className="about-entry-column project-index" aria-labelledby="project-index-title">
+         <div className="about-entry-heading office-project-heading">
+@@ -47,7 +48,7 @@ function Metrics({items}:{items:[string,string][]}) {return <dl className="proje
+ export function ProjectDetail({id}:{id:string}) {
+   useEffect(()=>{window.scrollTo({top:0,behavior:'instant'})},[id]);
+   const p=projects.find(p=>p.id===id)!;
+-  return <main className="interior-page about-detail project-detail"><div className="about-detail-backline"><Link href="/project/index">← ALL PROJECTS</Link><span>PROJECT_{id}</span></div>
++  return <main className="interior-page about-detail project-detail office-file"><div className="about-detail-backline"><Link href="/project/index">← ALL PROJECTS</Link><span>PROJECT_{id}</span></div>
+     <header className="page-masthead about-detail-masthead"><div><p className="page-eyebrow"><span>03</span>Selected / works</p><h1>{p.title}</h1></div><p className="page-description">{p.zh}</p></header>
+     <div className="page-rule"><span>Project / office026vera</span><span>File {id}</span></div>
+     {id==='001'&&<>
+diff --git a/artifacts/office026vera-portfolio/src/pages/research.tsx b/artifacts/office026vera-portfolio/src/pages/research.tsx
+index 69fbab4..548ad7f 100644
+--- a/artifacts/office026vera-portfolio/src/pages/research.tsx
++++ b/artifacts/office026vera-portfolio/src/pages/research.tsx
+@@ -44,7 +44,7 @@ function Label({children}:{children:ReactNode}) {return <p className="about-tool
+ export function ResearchDetail({id}:{id:'001'|'002'}) {
+   useEffect(()=>{ window.scrollTo({top:0,behavior:'instant'}); },[id]);
+   const c = categories.find(c=>c.id===id)!;
+-  return <main className="interior-page about-detail research-detail">
++  return <main className="interior-page about-detail research-detail office-file">
+     <div className="about-detail-backline"><Link href="/research/index">← RESEARCH ARCHIVE</Link><span>RESEARCH_{id}</span></div>
+     <div className="page-masthead about-detail-masthead office-research-masthead"><OfficeObject kind="paper" className="office-research-paper"/><div><p className="page-eyebrow"><span>04</span>RESEARCH / DOCUMENTS</p><h1>{c.title.toUpperCase()}</h1></div><p className="page-description">{c.zh}</p></div>
+     <div className="page-rule"><span>Research / office026vera</span><span>File {id}</span></div>

@@ -1,0 +1,32 @@
+Please make two targeted fixes to the existing office026vera website.
+
+### 1. Restore the original keyhole transition speed
+I have decided that the original transition speed was better. Please revert the keyhole-inspired page transition to its original duration and behavior before the most recent speed adjustment.
+
+If you can identify the previous duration in the code or change history, restore that exact value. Do not change the transition design, easing, or other animation properties.
+
+### 2. Fix the excess bottom whitespace on the mobile Home page only
+The mobile Home page still has unnecessary blank space at the bottom. However, the mobile About and other internal pages do not have this problem.
+
+This suggests the issue may be specific to the Home page layout rather than a global mobile layout problem.
+
+Please inspect the Home page and its mobile-specific styles first. Check:
+- The Home page's minimum height or fixed height
+- Any `100vh`, `100dvh`, or viewport-based height calculations
+- Bottom padding and margins
+- The height and aspect ratio of the bow-and-key image container
+- Flexbox or grid settings that may distribute extra vertical space
+- Any invisible elements or empty containers extending the page height
+
+Compare the Home page layout with the working mobile About page to identify the difference.
+
+Remove only the unnecessary blank space below the Home page's actual content. Do not crop or distort the bow-and-key image, remove necessary spacing between elements, or force other pages into a fixed height.
+
+Keep the desktop layout, the five clickable keys, all routes, and all other page designs unchanged.
+
+After making the changes, verify the Home page on mobile and confirm that:
+1. The original transition speed has been restored.
+2. The Home page no longer has excessive blank space at the bottom.
+3. The mobile About page and other pages remain unchanged.
+
+Please explain the actual cause of the Home page whitespace and the specific fix you applied. Do not simply reduce the page height without identifying the cause.

@@ -1,0 +1,63 @@
+/* Office Interaction System: transform/opacity only; no layout or asset changes. */
+:root {
+  --office-ease-out:cubic-bezier(.2,.7,.2,1);
+  --office-badge-duration:260ms;
+  --office-key-duration:180ms;
+  --office-cat-duration:350ms;
+  --office-note-duration:260ms;
+  --office-reveal-duration:400ms;
+  --office-file-duration:350ms;
+}
+.about-id-card { transition:transform var(--office-badge-duration) var(--office-ease-out); }
+.about-id-card:hover,.about-id-card:focus-visible { transform:none; }
+.about-id-card:active { transform:scale(.99); transition-duration:90ms; }
+.project-archive .about-cover-visual { position:relative; }
+.project-archive .about-cover-visual > img { transition:transform var(--office-key-duration) var(--office-ease-out); transform-origin:center; }
+.project-keycap-press-area { position:absolute; inset:25% 10% 24%; }
+.research-index-cat { transition:transform var(--office-cat-duration) var(--office-ease-out); transform-origin:50% 90%; }
+.office-note { transition:transform var(--office-note-duration) var(--office-ease-out); }
+@media(min-width:761px) and (hover:hover) and (pointer:fine) {
+  .about-id-card:hover,.about-id-card:focus-visible { transform:translateY(-7px) rotate(-.5deg); }
+  .about-id-card:active { transform:translateY(-9px) scale(1.005); transition-duration:90ms; }
+  .project-archive .about-cover-visual:has(.project-keycap-press-area:hover) > img { transform:translateY(2.5px) scale(.99); }
+  .research-index-row:hover .research-index-cat,.research-index-row:focus-within .research-index-cat { transform:translateX(10px) rotate(.6deg); }
+  .research-index-row:hover .research-open,.research-index-row:focus-within .research-open { color:var(--ink); }
+  .office-lab-index-entry:hover .office-note-003,.office-lab-index-entry:focus-visible .office-note-003 { transform:translateY(-2px) rotate(-3deg); }
+  .office-lab-index-entry:hover .office-note-004,.office-lab-index-entry:focus-visible .office-note-004 { transform:translateY(-2px) rotate(6deg); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .about-id-card,.about-id-card:hover,.about-id-card:focus-visible,.about-id-card:active { transform:none !important; transition:none !important; }
+  .project-archive .about-cover-visual > img,.research-index-cat { transform:none !important; transition:none !important; }
+  .office-note { transition:none !important; }
+  .office-note-003 { transform:rotate(-5deg) !important; }
+  .office-note-004 { transform:rotate(4deg) !important; }
+}
+
+.office-step-pending { opacity:0; transform:translateY(10px); }
+.office-step-visible { animation:office-step-enter var(--office-reveal-duration) var(--office-ease-out) var(--office-step-delay,0ms) both; }
+@keyframes office-step-enter { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@media(prefers-reduced-motion:reduce) {
+  .office-step-pending,.office-step-visible { opacity:1 !important; transform:none !important; animation:none !important; }
+}
+
+/* Number, classification and rules stay still; title then body settle within 430ms. */
+.office-file > .page-masthead h1,
+.office-file > .page-masthead > .page-description { animation:office-file-open var(--office-file-duration) var(--office-ease-out) both; }
+.office-file > :not(.about-detail-backline):not(.page-masthead):not(.page-rule):not(.page-footer):not(.lab-formula) { animation:office-file-open var(--office-file-duration) var(--office-ease-out) 80ms both; }
+@keyframes office-file-open { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+/* The explicit class also allows an acceptance harness to simulate the OS query. */
+.office-motion-reduced .about-id-card,
+.office-motion-reduced .project-archive .about-cover-visual > img,
+.office-motion-reduced .research-index-cat { transform:none !important; transition:none !important; }
+.office-motion-reduced .office-note { transition:none !important; }
+.office-motion-reduced .office-note-003 { transform:rotate(-5deg) !important; }
+.office-motion-reduced .office-note-004 { transform:rotate(4deg) !important; }
+.office-motion-reduced .office-step-pending,.office-motion-reduced .office-step-visible,
+.office-motion-reduced .office-file > .page-masthead h1,
+.office-motion-reduced .office-file > .page-masthead > .page-description,
+.office-motion-reduced .office-file > :not(.about-detail-backline):not(.page-masthead):not(.page-rule):not(.page-footer):not(.lab-formula) { animation:none !important; opacity:1 !important; transform:none !important; }
+@media(prefers-reduced-motion:reduce) {
+ .office-file > .page-masthead h1,
+ .office-file > .page-masthead > .page-description,
+ .office-file > :not(.about-detail-backline):not(.page-masthead):not(.page-rule):not(.page-footer):not(.lab-formula) { animation:none !important; opacity:1 !important; transform:none !important; }
+}

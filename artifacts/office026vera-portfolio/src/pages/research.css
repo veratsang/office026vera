@@ -1,0 +1,31 @@
+/* All archive, masthead, entry and body typography comes directly from About. */
+.research-detail .page-masthead h1 { overflow-wrap:anywhere; }
+.research-index-entries { margin-top:clamp(20px,2.4vh,26px); }
+.research-index-entry { color:inherit; transition:color 160ms ease; }
+.research-index-entry:hover .about-capability-heading h2 { color:#986c7a; }
+.research-index-entry:focus-visible { outline:2px solid var(--pink); outline-offset:4px; }
+.research-open { flex:0 0 auto; color:#986c7a; font:9px var(--app-font-mono); }
+.research-index-entry .about-section-kicker { margin-top:0; color:#a77d89; font:9px/1.5 var(--app-font-mono); }
+.research-case > .research-copy-label { margin-top:24px; }
+.research-inline-label { color:var(--ink); }
+.research-methods { margin:28px 0 0; padding:22px 0; border-top:1px solid var(--line); }
+.research-methods ol { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; list-style:none; padding:0; margin:18px 0; }
+.research-methods li { display:flex; flex-direction:column; gap:10px; min-width:0; color:#696368; font:14px/1.65 var(--app-font-sans); }
+.research-method-en { color:#918b8e; font:9px/1.5 var(--app-font-mono); overflow-wrap:anywhere; }
+.research-methods .research-method-note { color:#8b8588; font:12px/1.65 var(--app-font-sans); margin:0; }
+.research-cat { display:flex; justify-content:center; padding:4px 0; }
+.research-cat img { display:block; width:120px; height:auto; }
+@media(max-width:760px) {
+  .research-methods ol { grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+  .research-methods li { font-size:13px; }
+  .research-open { font-size:8px; }
+  .research-cat img { width:90px; }
+}
+
+/* The existing 64px / 35px About grid column stays unchanged. */
+.research-index-marker { display:flex; flex-direction:column; align-items:flex-start; gap:12px; min-width:0; }
+.research-index-cat { display:block; width:56px; max-width:100%; height:auto; object-fit:contain; pointer-events:none; user-select:none; }
+@media(max-width:760px) {
+  .research-index-marker { gap:10px; }
+  .research-index-cat { width:28px; }
+}

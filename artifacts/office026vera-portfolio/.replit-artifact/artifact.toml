@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "office026vera — Portfolio"
+description = "A responsive personal portfolio presenting art history research, content work, and digital experiments through five connected sections: Home, About, Project, Research, and Lab."
+version = "1.0.0"
+id = "artifacts/office026vera-portfolio"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25951
+
+[services.development]
+run = "pnpm --filter @workspace/office026vera-portfolio run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/office026vera-portfolio", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/office026vera-portfolio/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25951"
+BASE_PATH = "/"

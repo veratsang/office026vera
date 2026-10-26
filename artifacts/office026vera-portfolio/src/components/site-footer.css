@@ -1,0 +1,26 @@
+/* Layout only. Typography comes from the original About footer's shared rule. */
+.site-contact-footer {
+  margin: 36px auto 40px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(150px, .7fr) minmax(0, 2fr);
+  gap: 24px 48px;
+}
+.site-contact-footer h2,
+.site-contact-footer p,
+.site-contact-footer a {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-transform: inherit;
+  overflow-wrap: anywhere;
+}
+.site-contact-footer h2 { margin: 0 0 9px; }
+.site-contact-footer p { margin: 0; }
+.site-contact-footer a:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+.site-contact-footer--home { width: var(--home-visual-width, 100%); margin-top: 24px; }
+@media (max-width: 760px) {
+  .site-contact-footer { grid-template-columns: minmax(0, 1fr); gap: 22px; padding-top: 20px; margin-bottom: 32px; }
+}

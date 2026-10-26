@@ -1,0 +1,143 @@
+# Project: office026vera — Personal Portfolio Website
+
+You are a senior frontend developer and interaction designer. Help me build a real, functional, responsive personal portfolio website in this existing Replit project.
+
+## 1. Portfolio identity
+
+Website name: office026vera
+
+Positioning:
+Art History × Content × Digital Experiments
+
+Tagline:
+“Researching, creating, and building across disciplines.”
+
+The website presents my experience across art history research, content creation and operations, visual communication, and experimental digital projects.
+
+The overall visual direction should feel editorial, quiet, distinctive, and experimental. Avoid generic SaaS layouts and conventional resume templates.
+
+## 2. Primary design references
+
+Carefully inspect all uploaded images and my HOME design specification before coding.
+
+The main reference features:
+- A pink patterned satin bow.
+- A horizontal pink ribbon.
+- Five hanging antique metal keys.
+- A white or cold-white background.
+- A delicate, slightly vintage, editorial atmosphere.
+
+A second reference shows a keyhole-shaped opening. Use it as inspiration for the transition between pages.
+
+Treat the uploaded images as design references. Do not automatically stretch them across the entire page or replace the intended composition with unrelated stock imagery.
+
+## 3. HOME page
+
+The hierarchy should be:
+
+1. Main title: office026vera
+2. Subtitle: Art History × Content × Digital Experiments
+3. Supporting tagline: Researching, creating, and building across disciplines.
+4. Main bow-and-key visual and navigation.
+
+Typography:
+- Main title: approximately 66px on desktop.
+- Subtitle: approximately 15px on desktop.
+- Supporting tagline should remain secondary to the title.
+- Use a restrained type scale and generous whitespace.
+
+Colors:
+- Cold white or near-white background.
+- Dark neutral text.
+- Muted pink as the main visual accent.
+- Avoid excessive gradients, saturated colors, and unnecessary decorative elements.
+
+The layout should be designed for a MacBook-sized desktop screen first, while remaining usable on mobile.
+
+## 4. Five-key navigation
+
+The five keys correspond to:
+- Home
+- About
+- Project
+- Research
+- Lab
+
+First, attempt to preserve the complete original bow-and-key image and overlay five separate transparent clickable areas over the corresponding keys.
+
+Each key must navigate to its own route or section. Clicking Home returns to the homepage.
+
+Requirements:
+- The image should remain visually unchanged.
+- Each clickable area must align with the correct key.
+- Use accessible labels and keyboard-accessible navigation.
+- Ensure click targets remain usable at different viewport sizes.
+- Provide subtle hover and focus feedback without adding distracting visual effects.
+- Do not use one large clickable area for all five keys.
+
+Only split the image into separate assets if accurately positioning the clickable areas proves impractical. Explain the trade-offs before making that change.
+
+## 5. Keyhole-inspired page transitions
+
+Use the second reference as inspiration for transitions between the Home page and destination pages.
+
+Explore a restrained transition in which the current page appears to open through a keyhole-shaped aperture, revealing the destination page.
+
+The transition should:
+- Be smooth and brief.
+- Preserve readability and navigation usability.
+- Avoid excessive motion or long loading delays.
+- Respect the user's reduced-motion preference.
+- Degrade gracefully on mobile or when an advanced animation is unsupported.
+
+Do not claim to reproduce the reference exactly if the implementation differs.
+
+## 6. Site structure
+
+Create five connected pages or routes:
+
+- Home
+- About
+- Project
+- Research
+- Lab
+
+About:
+Personal introduction, education, skills, tools, languages, and contact information.
+
+Project:
+Institutional social media operations, personal Xiaohongshu content creation, and art education curriculum system design.
+
+Research:
+Art historical literature organization, museum object-label writing, and academic conference documentation.
+
+Lab:
+Interactive watering website, portfolio website experiments, and experimental learning tools.
+
+For the first implementation, prioritize the Home page and shared navigation. Create simple, coherent destination-page placeholders if detailed content is not yet implemented. Do not invent personal information or project metrics.
+
+## 7. Technical requirements
+
+- Inspect the existing project before changing files.
+- Reuse its current framework and working components where appropriate.
+- Build a real, runnable website, not a static screenshot or slide deck.
+- Use maintainable, reusable components.
+- Keep content and styling easy to modify.
+- Make the site responsive for desktop and mobile browsers.
+- Ensure all navigation links work.
+- Do not overwrite unrelated existing work.
+- Do not add unnecessary dependencies.
+
+## 8. Implementation workflow
+
+Before substantial changes, summarize your implementation plan and identify any missing assets.
+
+After approval:
+1. Implement the Home page.
+2. Implement the five-key navigation.
+3. Add the keyhole-inspired transition.
+4. Create connected destination-page placeholders.
+5. Run the application and fix errors.
+6. Test desktop and mobile layouts and all five navigation targets.
+
+Report any limitations honestly. Do not state that an interaction works unless it has actually been implemented and tested.

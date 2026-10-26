@@ -1,0 +1,45 @@
+Please make three targeted refinements to the existing office026vera website. Do not rebuild the project or redesign the current visual style.
+
+### 1. Slow down the keyhole transition
+The current keyhole-inspired page transition feels slightly too fast.
+
+Increase the current transition duration by approximately 1 second, keeping the existing animation style and easing where possible. This means adding about 1 second to the current duration, not setting the total duration to 1 second.
+
+Keep the transition smooth and elegant. Avoid unnecessary delays before navigation begins, and ensure the animation does not interfere with usability or route changes.
+
+### 2. Fix the mobile bottom whitespace
+The website is usable on mobile, but there is unnecessary blank space at the bottom of the page.
+
+Inspect the existing mobile CSS and layout. Check:
+- Page and content container heights
+- Image container sizing and aspect ratios
+- Bottom margins and padding
+- Viewport height units such as 100vh and 100dvh
+- Any invisible or oversized elements affecting document height
+
+Remove only the unnecessary blank space. Preserve comfortable spacing and ensure that all content remains visible and accessible. Do not hide content or force the entire site into a fixed height if scrolling is needed on other pages.
+
+### 3. Optimize the desktop Home page for a 16:9 viewport
+For a desktop viewport with a 16:9 aspect ratio, the entire Home page first-screen composition should fit within the visible browser content area without vertical scrolling.
+
+The visible composition should include:
+- The site title, office026vera
+- The subtitle, Art History × Content × Digital Experiments
+- The supporting tagline
+- The complete pink bow-and-key image, including all five keys
+
+Preserve the current typography, colors, image, and overall design. Adjust vertical spacing and image sizing proportionally only as needed to fit the available viewport.
+
+Account for the browser's actual content area rather than assuming the entire screen height is available to the webpage. Do not distort or crop the main image.
+
+### Preserve existing functionality
+- Keep all five keys individually clickable and preserve their current destinations.
+- Keep the existing top navigation.
+- Preserve the current desktop design wherever possible.
+- Do not modify unrelated pages or content.
+
+After making the changes, run the app and report:
+1. The previous and new transition durations.
+2. What caused the mobile bottom whitespace and how it was fixed.
+3. The desktop viewport dimensions used to verify the 16:9 first-screen layout.
+4. Whether all five keys and page transitions still work.

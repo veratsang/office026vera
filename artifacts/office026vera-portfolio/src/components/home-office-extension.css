@@ -1,0 +1,135 @@
+/* Home-only objects. All type families and UI colors come from the existing site. */
+.home-office-extension { width:var(--home-visual-width,100%); margin:clamp(80px,10vw,132px) auto 0; padding-bottom:32px; }
+.home-object-label { display:flex; justify-content:space-between; gap:20px; padding:14px 0; border-top:1px solid var(--line); color:var(--soft-ink); font:9px/1.6 var(--app-font-mono); letter-spacing:.06em; }
+.home-object-label > span:first-child { color:var(--pink); }
+.home-selected { margin-bottom:clamp(64px,8vw,104px); }
+.home-printer { --print-origin:48px; position:relative; width:min(100%,760px); margin:40px auto 0; padding-top:var(--print-origin); }
+.home-printer-housing { position:absolute; inset:0 0 auto; height:90px; pointer-events:none; }
+.home-printer-top { position:relative; z-index:5; display:flex; align-items:center; justify-content:space-between; margin:11px 25px 0; color:#797d80; font:8px var(--app-font-mono); letter-spacing:.14em; }
+.home-printer-top i { width:5px; height:5px; border-radius:50%; background:#aeb7b6; box-shadow:0 0 0 2px #e7e9e8; }
+.home-printer-slot { position:absolute; z-index:1; inset:33px 27px 12px; border:3px solid #a7abae; border-radius:4px; background:#303437; box-shadow:inset 0 4px 5px #0005; }
+.home-printer-lip { position:absolute; z-index:4; height:4px; left:27px; right:27px; top:calc(var(--print-origin) - 2px); border-top:1px solid #f7f8f8; background:#bfc5c8; }
+.home-print-window { position:relative; z-index:3; overflow:hidden; width:calc(100% - 84px); margin:0 auto; border-bottom:1px solid #e4e3df; filter:drop-shadow(0 3px 4px #29292b0a); }
+.home-print-paper { padding:64px clamp(22px,4.5vw,56px) 26px; color:var(--ink); background:#fcfbf8; border:1px solid #e4e3df; }
+.home-print-heading { margin-bottom:28px; }
+.home-print-meta { margin:0; color:#8b8588; font:9px/1.7 var(--app-font-mono); letter-spacing:.08em; }
+.home-print-heading h2 { margin:16px 0 14px; font:400 clamp(42px,5.3vw,64px)/.98 var(--app-font-serif); letter-spacing:-.025em; }
+.home-printed-files { padding:0; margin:0; list-style:none; }
+.home-printed-files li { border-top:1px dashed #cbc9c7; }
+.home-printed-file { display:block; padding:25px 0 24px; color:inherit; text-decoration:none; }
+.home-print-file-meta { display:flex; align-items:baseline; justify-content:space-between; gap:14px; font:9px/1.6 var(--app-font-mono); color:#8b8588; letter-spacing:.03em; }
+.home-print-file-meta > span:first-child { color:#aa7889; white-space:nowrap; }
+.home-print-file-meta > span:last-child { text-align:right; }
+.home-printed-file h3 { margin:12px 0 5px; font:400 30px/1.1 var(--app-font-serif); letter-spacing:-.015em; transition:color 180ms ease; }
+.home-print-zh { margin:0; font:400 15px/1.65 var(--app-font-sans); color:#575257; }
+.home-print-description { margin:12px 0 16px; color:#575257; font:400 15px/1.9 var(--app-font-sans); }
+.home-print-file-bottom { display:flex; align-items:end; justify-content:space-between; gap:12px; }
+.home-print-results { color:#6f6369; font:10px/1.6 var(--app-font-mono); }
+.home-print-results small { display:block; margin-top:3px; color:#8b8588; font:10px/1.6 var(--app-font-sans); }
+.home-print-open { color:#aa7889; font:9px/1.7 var(--app-font-mono); white-space:nowrap; }
+.home-print-open > span { display:inline-block; transition:transform 180ms ease; }
+.home-print-end { display:flex; justify-content:space-between; gap:10px; margin:0; padding-top:18px; border-top:1px dashed #cbc9c7; color:#8b8588; font:8px/1.7 var(--app-font-mono); letter-spacing:.04em; }
+.home-printed-file:focus-visible,.home-envelope-contact a:focus-visible { outline:2px solid var(--pink); outline-offset:6px; }
+.home-envelope { position:relative; isolation:isolate; container-type:inline-size; display:grid; grid-template-rows:54fr 46fr; aspect-ratio:1.95; background:#292d32; border:1px solid #d6d8d9; }
+.home-envelope-sheet { position:relative; z-index:1; min-height:0; display:flex; flex-direction:column; justify-content:center; padding:10px 18px 60px; text-align:center; border-radius:0 0 40px 40px; background:#fcfbf8; box-shadow:0 2px 2px #00000010; }
+.home-envelope-sheet h2 { margin:8px 0 6px; font:italic 400 clamp(50px,8cqw,96px)/.9 var(--app-font-serif); letter-spacing:-.025em; }
+.home-envelope-sheet h2 em { font-weight:400; }
+.home-envelope-subtitle { margin:6px 0 4px; color:#666267; font:9px/1.5 var(--app-font-mono); letter-spacing:.08em; }
+.home-envelope-looking { margin:0; color:#8b8588; font:8px/1.5 var(--app-font-mono); letter-spacing:.02em; }
+.home-envelope-closure { position:absolute; z-index:2; top:calc(54% - 66px); left:calc(50% - 35px); width:70px; height:126px; pointer-events:none; }
+.home-envelope-pocket { min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:end; gap:10px; padding:54px 32px 10px; color:#edeceb; }
+.home-envelope-pocket .home-print-meta { color:#aab0b7; }
+.home-envelope-contact a { display:inline-flex; align-items:center; gap:10px; margin-top:6px; color:#f1eeed; font:400 clamp(24px,3.4cqw,36px)/1.2 var(--app-font-serif); letter-spacing:-.02em; white-space:nowrap; text-decoration-color:#b9919e; text-underline-offset:6px; }
+.home-envelope-contact a span { color:var(--pink); font:16px var(--app-font-sans); }
+.home-envelope-signoff { text-align:right; }
+.home-envelope-signoff p { margin:0 0 7px; font:400 clamp(22px,3cqw,30px)/1 var(--app-font-serif); letter-spacing:-.025em; }
+.home-envelope-signoff > span { display:block; color:#aab0b7; font:8px/1.7 var(--app-font-mono); }
+.home-envelope-footer { grid-column:1/-1; padding-top:10px; border-top:1px solid #494d52; color:#aab0b7; font:8px/1.6 var(--app-font-mono); }
+@media(hover:hover) and (pointer:fine) {
+ .home-printed-file:hover h3 { color:#aa7889; }
+ .home-printed-file:hover .home-print-open > span { transform:translate(2px,-2px); }
+ .home-envelope-contact a:hover { color:var(--pink); }
+}
+@media(max-width:760px) {
+ .home-object-label { font-size:8px; gap:12px; }
+ .home-object-label > span:last-child { text-align:right; }
+ .home-printer { --print-origin:40px; margin-top:28px; }
+ .home-printer-housing { height:72px; }
+ .home-printer-top { margin:9px 16px 0; font-size:7px; }
+ .home-printer-slot { inset:28px 12px 10px; border-width:2px; }
+ .home-printer-lip { left:12px; right:12px; }
+ .home-print-window { width:calc(100% - 30px); }
+ .home-print-paper { padding:28px 18px 15px; overflow-wrap:break-word; }
+ .home-print-heading { margin-bottom:16px; }
+ .home-print-heading h2 { font-size:21px; line-height:1; margin:12px 0 10px; }
+ .home-print-meta { font-size:8px; line-height:1.5; }
+ .home-print-file-meta { font-size:8px; line-height:1.5; gap:8px; }
+ .home-printed-file { padding:16px 0; }
+ .home-printed-file h3 { font-size:17px; line-height:1.1; margin:9px 0 4px; }
+ .home-print-zh { font-size:11px; line-height:1.5; }
+ .home-print-description { font-size:10px; line-height:1.7; margin:9px 0 12px; }
+ .home-print-results { font-size:8.5px; line-height:1.5; }
+ .home-print-results small { font-size:8.5px; line-height:1.5; margin-top:2px; }
+ .home-print-open { font-size:8.5px; line-height:1.5; }
+ .home-print-file-bottom { flex-wrap:wrap; row-gap:6px; }
+ /* Same value as the existing category label's .home-print-file-meta color. */
+ .home-printed-files { --home-file-text-color:#8b8588; }
+ .home-printed-files .home-printed-file,
+ .home-printed-files .home-printed-file h3,
+ .home-printed-files .home-print-zh,
+ .home-printed-files .home-print-description,
+ .home-printed-files .home-print-results,
+ .home-printed-files .home-print-results small,
+ .home-printed-files .home-print-file-meta,
+ .home-printed-files .home-print-file-meta > span,
+ .home-printed-files .home-print-open { color:var(--home-file-text-color); }
+
+ .home-print-end { font-size:8px; line-height:1.5; padding-top:14px; }
+ /* Restore the full mobile width; content defines the compact object's height. */
+ .home-envelope { width:100%; margin-inline:auto; aspect-ratio:auto; grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto; }
+ .home-envelope-sheet { grid-area:1/1; min-height:0; padding:4px 14px 18px; border-radius:0 0 17px 17px; }
+ .home-envelope .home-print-meta { font-size:7.2px; line-height:1.4; letter-spacing:.04em; }
+ .home-envelope-sheet h2 { font-size:21px; margin:2px 0 2px; }
+ .home-envelope-subtitle { font-size:7.2px; line-height:1.4; letter-spacing:.04em; margin:1px 0 1px; }
+ .home-envelope-looking { font-size:7.2px; line-height:1.4; max-width:none; margin:0; }
+ .home-envelope-closure { position:relative; grid-area:1/1; align-self:end; justify-self:center; top:auto; left:auto; width:23.333333px; height:42px; margin-bottom:-21px; }
+ .home-envelope-pocket { grid-area:2/1; grid-template-columns:minmax(0,1fr) minmax(0,1fr); padding:20px 14px 4px; gap:2px 12px; }
+ .home-envelope-contact a { font-size:11.5px; gap:3px; margin-top:3px; text-underline-offset:3px; }
+ .home-envelope-contact a span { font-size:8.5px; }
+ .home-envelope-signoff { text-align:right; }
+ .home-envelope-signoff p { font-size:15px; margin-bottom:4px; }
+ .home-envelope-signoff > span { font-size:7.2px; line-height:1.4; }
+ .home-envelope-footer { padding-top:2px; font-size:7.2px; line-height:1.5; }
+
+}
+@media(prefers-reduced-motion:reduce) {
+ .home-office-extension *, .home-office-extension *::before { animation:none!important; transition:none!important; }
+ .home-print-open > span { transform:none!important; }
+}
+
+
+.home-printer-shell { position:absolute; inset:0; z-index:0; border:1px solid #b9bdc0; border-radius:9px 9px 5px 5px; background:linear-gradient(#f2f3f3,#c4c8ca); box-shadow:0 3px 6px #29292b12,inset 0 1px #fff; }
+.home-printer-forehead { position:absolute; top:0; left:1px; right:1px; height:calc(var(--print-origin) - 2px); z-index:4; border-radius:8px 8px 0 0; background:linear-gradient(#f2f3f3,#d8dbdd); }
+.home-printer-control { position:absolute; inset:0 0 auto; z-index:6; height:90px; width:100%; border:0; border-radius:9px 9px 5px 5px; background:transparent; cursor:pointer; }
+.home-printer-control:hover:not(:disabled) { box-shadow:inset 0 0 0 1px var(--pink); }
+.home-printer-control:disabled { cursor:default; }
+.home-printer-control[aria-busy="true"] { cursor:progress; }
+.home-printer-control:focus-visible,.home-print-controls button:focus-visible { outline:2px solid var(--pink); outline-offset:5px; }
+.home-printer.is-printing .home-print-window { transition:height 800ms cubic-bezier(.22,.65,.25,1); }
+.home-print-controls { display:flex; align-items:center; justify-content:space-between; gap:16px; width:calc(100% - 84px); margin:18px auto 0; color:#aa7889; font:9px/1.7 var(--app-font-mono); }
+.home-print-controls p { margin:0; }
+.home-print-controls button { flex-shrink:0; padding:6px 0; border:0; border-bottom:1px solid currentColor; background:none; color:inherit; font:inherit; cursor:pointer; }
+.home-nojs { width:min(100% - 36px,760px); margin:48px auto; }
+@media(max-width:760px) {
+ .home-printer-control { height:72px; }
+ .home-print-controls { width:calc(100% - 30px); font-size:8.5px; line-height:1.5; gap:8px; margin-top:14px; }
+ .home-print-controls button { padding:5px 0; }
+}
+@media(prefers-reduced-motion:reduce) { .home-printer.is-printing .home-print-window { transition:none; } }
+.office-motion-reduced .home-printer.is-printing .home-print-window { transition:none; }
+
+.home-nojs h1,.home-nojs h2 { font-family:var(--app-font-serif); font-weight:400; }
+.home-nojs article { padding:24px 0; border-top:1px dashed var(--line); }
+
+.home-nojs h1 { font-size:42px; }
+.home-nojs h2 { font-size:28px; line-height:1.1; }

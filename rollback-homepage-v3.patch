@@ -1,0 +1,327 @@
+diff --git a/artifacts/office026vera-portfolio/index.html b/artifacts/office026vera-portfolio/index.html
+index 3f12c96..465a624 100644
+--- a/artifacts/office026vera-portfolio/index.html
++++ b/artifacts/office026vera-portfolio/index.html
+@@ -19,6 +19,12 @@
+   </head>
+   <body>
+     <div id="root"></div>
++    <noscript><main class="home-nojs"><header class="home-print-heading"><p class="home-print-meta">OFFICE026VERA / ARCHIVE</p><h1>Selected Works</h1><p>THREE FILES FROM THE ARCHIVE</p></header>
++      <article><p>FILE 001 · CONTENT / PROJECT_002</p><h2>Personal Social Media Operations</h2><p>个人社交媒体内容运营</p><p>独立拍摄与剪辑线下活动内容，结合受众兴趣、社媒流行趋势和素材特点进行内容制作。</p><p>131K VIEWS / 28.5K LIKES · 已发布案例的历史表现</p><a href="#/project/002">OPEN FILE ↗</a></article>
++      <article><p>FILE 002 · DIGITAL EXPERIMENT / LAB_001</p><h2>Interactive Plant-Watering Website</h2><p>一日水长｜互动浇水网站</p><p>围绕线下展位真实植物的浇水需求，设计线上互动流程，并通过 AI 辅助开发实现网页功能。</p><a href="#/lab/001">OPEN FILE ↗</a></article>
++      <article><p>FILE 003 · RESEARCH / RESEARCH_001</p><h2>Museum &amp; Exhibition Texts</h2><p>博物馆与展览文本</p><p>结合艺术史研究与文献整理经验，参与博物馆展览文本撰写及专业信息组织。</p><a href="#/research/001">OPEN FILE ↗</a></article>
++      <p>详情页使用 JavaScript；以上三份档案信息已完整显示。</p><a href="mailto:velium0@163.com">velium0@163.com ↗</a>
++    </main></noscript>
+     <script type="module" src="/src/main.tsx"></script>
+   </body>
+ </html>
+diff --git a/artifacts/office026vera-portfolio/public/homepage-extension-demo.html b/artifacts/office026vera-portfolio/public/homepage-extension-demo.html
+index 747d111..d93e97f 100644
+--- a/artifacts/office026vera-portfolio/public/homepage-extension-demo.html
++++ b/artifacts/office026vera-portfolio/public/homepage-extension-demo.html
+@@ -6,7 +6,7 @@
+ <h1>office026vera / Printed files &amp; sealed archive</h1>
+ <p>这是验收工具，内部加载当前真实网站。请悬停、点击或用 Tab 聚焦；下方记录实际 CSS 动画帧，不是截图模拟。</p>
+ <nav class="controls" aria-label="首页动画场景"><button data-scene="print" aria-pressed="true">01 打印机出纸</button><button data-scene="envelope" aria-pressed="false">02 档案袋封口</button></nav>
+-<div class="controls"><label>视口 <select id="size"><option>1440 × 900</option><option>1920 × 1080</option><option>1366 × 768</option><option>1024 × 768</option><option>768 × 1024</option><option>430 × 932</option><option>390 × 844</option><option>375 × 667</option></select></label><label><input id="reduced" type="checkbox">模拟减少动态</label><label><input id="no-observer" type="checkbox">模拟无 Intersection Observer</label><button id="replay">重新访问 / 重播</button><button id="save">保存实测记录</button></div>
++<div class="controls"><label>视口 <select id="size"><option>1440 × 900</option><option>1920 × 1080</option><option>1366 × 768</option><option>1024 × 768</option><option>768 × 1024</option><option>430 × 932</option><option>390 × 844</option><option>375 × 667</option></select></label><label><input id="reduced" type="checkbox">模拟减少动态</label><label><input id="no-observer" type="checkbox">模拟无观察器</label><button id="replay">重新访问 / 重播</button><button id="save">保存实测记录</button></div>
+ <p id="instruction">滚动查看真实首页的新模块；三个作品入口仍打开原有详情。</p>
+ <div class="viewport" id="viewport"><iframe id="site" title="当前作品集的真实交互"></iframe></div>
+ <output id="state" aria-live="polite">正在载入…</output>
+@@ -14,24 +14,25 @@
+ <p>演示中的减少动态与缺少 Observer 选项只作用于本验收框架，不保存设置、不改变主站。主站正常读取系统偏好。</p>
+ <a href="./">返回作品集 ↗</a>
+ </main><script type="module">
+-const scenes={print:['/','.home-printer','向下滚动或点击重播，观察静止打印机下方的纸张裁切显现。Tab 聚焦入口时立即显示全部清单。'],envelope:['/','.home-envelope','档案袋进入视口时，细绳仅轻微收紧一次。邮箱与署名保持静止。']};
++const scenes={print:['/','.home-printer','向下滚动或点击重播，先显示 FILE 001；点击打印机或按 Enter/Space，依次打印 FILE 002、003；PRINT ALL 直接展示全部。'],envelope:['/','.home-envelope','档案袋进入视口时，细绳仅轻微收紧一次。邮箱与署名保持静止。']};
+ let scene='print',records={},metrics={},generation=0,loadRequest=0,timer,cleanup=()=>{};
+ const frame=document.querySelector('#site'),state=document.querySelector('#state'),trace=document.querySelector('#trace');
+ function boot(route,reduced,noObserver){
+  window.location.hash=route;
+  if(reduced){const original=window.matchMedia.bind(window);window.matchMedia=query=>query.includes('prefers-reduced-motion')?{matches:true,media:query,onchange:null,addListener(){},removeListener(){},addEventListener(){},removeEventListener(){},dispatchEvent(){return true}}:original(query);}
+- if(noObserver)Object.defineProperty(window,'IntersectionObserver',{value:undefined,configurable:true});
++ if(noObserver){Object.defineProperty(window,'IntersectionObserver',{value:undefined,configurable:true});Object.defineProperty(window,'ResizeObserver',{value:undefined,configurable:true});}
+ }
+ function fit(){const [width,height]=document.querySelector('#size').value.split(' × ').map(Number);frame.width=width;frame.height=height;const scale=Math.min(1,document.querySelector('#viewport').clientWidth/width);frame.style.transform=`scale(${scale})`;document.querySelector('#viewport').style.height=`${height*scale}px`;}
+ function inspect(d,w){
+- const serial=++generation;let cls=0,observer,active=new WeakSet();records={};metrics={};trace.textContent='尚未触发动画';
+- function sample(el,label){if(!el||active.has(el))return;active.add(el);const start=w.performance.now(),frames=[];function capture(t){const c=w.getComputedStyle(el);frames.push({ms:Math.round(t-start),opacity:Number(c.opacity),transform:c.transform,clipPath:c.clipPath,width:Math.round(el.getBoundingClientRect().width),height:Math.round(el.getBoundingClientRect().height),animation:c.animationName,duration:c.animationDuration});records[label]=frames;trace.textContent=JSON.stringify({metrics,records},null,2);}capture(start);function tick(t){if(serial!==generation)return;capture(t);if(t-start<1000&&frames.length<65)w.requestAnimationFrame(tick);else active.delete(el)}w.requestAnimationFrame(tick)}
++ const serial=++generation;let cls=0,observer,active=new Set();records={};metrics={};trace.textContent='尚未触发动画';
++ function sample(el,label){if(!el||active.has(label))return;active.add(label);const start=w.performance.now(),frames=[];function capture(t){const c=w.getComputedStyle(el);frames.push({ms:Math.round(t-start),opacity:Number(c.opacity),transform:c.transform,clipPath:c.clipPath,width:Math.round(el.getBoundingClientRect().width),height:Math.round(el.getBoundingClientRect().height),animation:c.animationName,duration:c.animationDuration});records[label]=frames;trace.textContent=JSON.stringify({metrics,records},null,2);}capture(start);function tick(t){if(serial!==generation)return;capture(t);if(t-start<1000&&frames.length<65)w.requestAnimationFrame(tick);else active.delete(label)}w.requestAnimationFrame(tick)}
++ function heightTransition(e){if(e.propertyName==='height'&&e.target.matches('.home-print-window'))sample(e.target,'paper height / '+d.querySelector('.home-printer').dataset.printedFiles);}
+  function interaction(e){const el=e.target.closest?.('.home-printed-file');if(!el)return;sample(el.querySelector('h3'),e.type+' / '+el.getAttribute('href'));}
+  function animation(e){if(e.animationName.startsWith('home-')){const label=e.target.tagName==='LI'?'FILE '+(Array.from(e.target.parentElement.children).indexOf(e.target)+1):e.target.getAttribute('class');sample(e.target,e.animationName+' / '+label);}}
+- d.addEventListener('transitionrun',interaction,true);d.addEventListener('pointerover',interaction);d.addEventListener('focusin',interaction);d.addEventListener('animationstart',animation,true);
++ d.addEventListener('transitionrun',interaction,true);d.addEventListener('transitionrun',heightTransition,true);d.addEventListener('pointerover',interaction);d.addEventListener('focusin',interaction);d.addEventListener('animationstart',animation,true);
+  try{observer=new w.PerformanceObserver(list=>{for(const e of list.getEntries())if(!e.hadRecentInput)cls+=e.value});observer.observe({type:'layout-shift',buffered:false});}catch{}
+- timer=setInterval(()=>{const root=d.documentElement;metrics={scene,route:w.location.hash,viewport:[w.innerWidth,w.innerHeight],reducedQuery:w.matchMedia('(prefers-reduced-motion: reduce)').matches,reducedClass:root.classList.contains('office-motion-reduced'),observerAvailable:typeof w.IntersectionObserver!=='undefined',horizontalOverflow:root.scrollWidth>root.clientWidth,printerState:d.querySelector('.home-printer')?.dataset.homeReveal||'static',envelopeState:d.querySelector('.home-envelope')?.dataset.homeReveal||'static',originalKeys:d.querySelectorAll('.key-target').length,printedFiles:d.querySelectorAll('.home-printed-file').length,layoutShift:Number(cls.toFixed(5)),recordedEffects:Object.keys(records)};state.textContent=JSON.stringify(metrics,null,2);},180);
+- cleanup=()=>{clearInterval(timer);observer?.disconnect();d.removeEventListener('transitionrun',interaction,true);d.removeEventListener('pointerover',interaction);d.removeEventListener('focusin',interaction);d.removeEventListener('animationstart',animation,true);};
++ timer=setInterval(()=>{const root=d.documentElement;metrics={scene,route:w.location.hash,viewport:[w.innerWidth,w.innerHeight],reducedQuery:w.matchMedia('(prefers-reduced-motion: reduce)').matches,reducedClass:root.classList.contains('office-motion-reduced'),observerAvailable:typeof w.IntersectionObserver!=='undefined',horizontalOverflow:root.scrollWidth>root.clientWidth,printedFilesVisible:d.querySelector('.home-printer')?.dataset.printedFiles,printing:d.querySelector('.home-printer-control')?.getAttribute('aria-busy'),paperVisibleHeight:Math.round(d.querySelector('.home-print-window')?.getBoundingClientRect().height||0),envelopeState:d.querySelector('.home-envelope')?.dataset.homeReveal||'static',originalKeys:d.querySelectorAll('.key-target').length,printedFiles:d.querySelectorAll('.home-printed-file').length,layoutShift:Number(cls.toFixed(5)),recordedEffects:Object.keys(records)};state.textContent=JSON.stringify(metrics,null,2);},180);
++ cleanup=()=>{clearInterval(timer);observer?.disconnect();d.removeEventListener('transitionrun',interaction,true);d.removeEventListener('transitionrun',heightTransition,true);d.removeEventListener('pointerover',interaction);d.removeEventListener('focusin',interaction);d.removeEventListener('animationstart',animation,true);};
+  const wait=new MutationObserver(()=>{if(d.querySelector('main')){wait.disconnect();const target=scenes[scene][1];if(target)w.requestAnimationFrame(()=>d.querySelector(target)?.scrollIntoView({block:scene==='print'?'start':'center',behavior:'instant'}));}});wait.observe(d,{childList:true,subtree:true});if(d.querySelector('main')){wait.disconnect();const target=scenes[scene][1];if(target)d.querySelector(target)?.scrollIntoView({block:scene==='print'?'start':'center',behavior:'instant'});}
+ }
+ async function load(){const request=++loadRequest;cleanup();++generation;const [route,,instruction]=scenes[scene];document.querySelector('#instruction').textContent=instruction;state.textContent='正在载入…';document.querySelectorAll('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===scene)));fit();const html=await fetch('./index.html',{cache:'no-store'}).then(r=>r.text());if(request!==loadRequest)return;const base=new URL('./',location.href).href;const setup=`<base href="${base}"><script>(${boot.toString()})(${JSON.stringify(route)},${document.querySelector('#reduced').checked},${document.querySelector('#no-observer').checked})<\/script>`;frame.onload=()=>{if(request===loadRequest)inspect(frame.contentDocument,frame.contentWindow);};frame.srcdoc=html.replace('<head>','<head>'+setup);}
+diff --git a/artifacts/office026vera-portfolio/src/components/home-office-extension.css b/artifacts/office026vera-portfolio/src/components/home-office-extension.css
+index f5813bd..66ae939 100644
+--- a/artifacts/office026vera-portfolio/src/components/home-office-extension.css
++++ b/artifacts/office026vera-portfolio/src/components/home-office-extension.css
+@@ -1,15 +1,15 @@
+ /* Home-only objects. All type families and UI colors come from the existing site. */
+-.home-office-extension { margin-top:clamp(80px,10vw,132px); padding-bottom:32px; }
++.home-office-extension { width:var(--home-visual-width,100%); margin:clamp(80px,10vw,132px) auto 0; padding-bottom:32px; }
+ .home-object-label { display:flex; justify-content:space-between; gap:20px; padding:14px 0; border-top:1px solid var(--line); color:var(--soft-ink); font:9px/1.6 var(--app-font-mono); letter-spacing:.06em; }
+ .home-object-label > span:first-child { color:var(--pink); }
+ .home-selected { margin-bottom:clamp(64px,8vw,104px); }
+-.home-printer { position:relative; width:min(100%,760px); margin:40px auto 0; padding-top:58px; }
+-.home-printer-housing { position:absolute; top:0; left:0; z-index:3; width:100%; height:90px; border:1px solid #b9bdc0; border-radius:9px 9px 5px 5px; background:linear-gradient(#f2f3f3 0%,#d8dbdd 72%,#c4c8ca 100%); box-shadow:0 3px 6px #29292b12,inset 0 1px #fff; }
+-.home-printer-top { display:flex; align-items:center; justify-content:space-between; margin:11px 25px 0; color:#797d80; font:8px var(--app-font-mono); letter-spacing:.14em; }
++.home-printer { --print-origin:48px; position:relative; width:min(100%,760px); margin:40px auto 0; padding-top:var(--print-origin); }
++.home-printer-housing { position:absolute; inset:0 0 auto; height:90px; pointer-events:none; }
++.home-printer-top { position:relative; z-index:5; display:flex; align-items:center; justify-content:space-between; margin:11px 25px 0; color:#797d80; font:8px var(--app-font-mono); letter-spacing:.14em; }
+ .home-printer-top i { width:5px; height:5px; border-radius:50%; background:#aeb7b6; box-shadow:0 0 0 2px #e7e9e8; }
+-.home-printer-slot { position:absolute; inset:33px 27px 12px; border:3px solid #a7abae; border-radius:4px; background:#303437; box-shadow:inset 0 4px 5px #0005; }
+-.home-printer-lip { position:absolute; height:13px; left:24px; right:24px; bottom:3px; border-top:1px solid #f7f8f8; border-radius:0 0 4px 4px; background:#d0d4d6; }
+-.home-print-window { position:relative; z-index:1; width:calc(100% - 84px); margin:0 auto; filter:drop-shadow(0 3px 4px #29292b0a); }
++.home-printer-slot { position:absolute; z-index:1; inset:33px 27px 12px; border:3px solid #a7abae; border-radius:4px; background:#303437; box-shadow:inset 0 4px 5px #0005; }
++.home-printer-lip { position:absolute; z-index:4; height:4px; left:27px; right:27px; top:calc(var(--print-origin) - 2px); border-top:1px solid #f7f8f8; background:#bfc5c8; }
++.home-print-window { position:relative; z-index:3; overflow:hidden; width:calc(100% - 84px); margin:0 auto; border-bottom:1px solid #e4e3df; filter:drop-shadow(0 3px 4px #29292b0a); }
+ .home-print-paper { padding:64px clamp(22px,4.5vw,56px) 26px; color:var(--ink); background:#fcfbf8; border:1px solid #e4e3df; }
+ .home-print-heading { margin-bottom:28px; }
+ .home-print-meta { margin:0; color:#8b8588; font:9px/1.7 var(--app-font-mono); letter-spacing:.08em; }
+@@ -30,21 +30,21 @@
+ .home-print-open > span { display:inline-block; transition:transform 180ms ease; }
+ .home-print-end { display:flex; justify-content:space-between; gap:10px; margin:0; padding-top:18px; border-top:1px dashed #cbc9c7; color:#8b8588; font:8px/1.7 var(--app-font-mono); letter-spacing:.04em; }
+ .home-printed-file:focus-visible,.home-envelope-contact a:focus-visible { outline:2px solid var(--pink); outline-offset:6px; }
+-.home-envelope { position:relative; isolation:isolate; background:#292d32; border:1px solid #d6d8d9; }
+-.home-envelope-sheet { position:relative; z-index:1; min-height:300px; padding:30px 24px 68px; text-align:center; border-radius:0 0 58px 58px; background:#fcfbf8; box-shadow:0 2px 2px #00000010; }
+-.home-envelope-sheet h2 { margin:22px 0 10px; font:400 clamp(76px,9.2vw,124px)/.9 var(--app-font-serif); letter-spacing:-.035em; }
++.home-envelope { position:relative; isolation:isolate; container-type:inline-size; display:grid; grid-template-rows:54fr 46fr; aspect-ratio:1.95; background:#292d32; border:1px solid #d6d8d9; }
++.home-envelope-sheet { position:relative; z-index:1; min-height:0; display:flex; flex-direction:column; justify-content:center; padding:10px 18px 60px; text-align:center; border-radius:0 0 40px 40px; background:#fcfbf8; box-shadow:0 2px 2px #00000010; }
++.home-envelope-sheet h2 { margin:8px 0 6px; font:italic 400 clamp(50px,8cqw,96px)/.9 var(--app-font-serif); letter-spacing:-.025em; }
+ .home-envelope-sheet h2 em { font-weight:400; }
+-.home-envelope-subtitle { margin:16px 0 9px; color:#666267; font:10px/1.7 var(--app-font-mono); letter-spacing:.12em; }
+-.home-envelope-looking { margin:0; color:#8b8588; font:9px/1.7 var(--app-font-mono); letter-spacing:.04em; }
+-.home-envelope-closure { position:absolute; z-index:2; top:214px; left:calc(50% - 50px); width:100px; height:180px; pointer-events:none; }
+-.home-envelope-pocket { min-height:260px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:end; gap:32px; padding:116px 48px 20px; color:#edeceb; }
++.home-envelope-subtitle { margin:6px 0 4px; color:#666267; font:9px/1.5 var(--app-font-mono); letter-spacing:.08em; }
++.home-envelope-looking { margin:0; color:#8b8588; font:8px/1.5 var(--app-font-mono); letter-spacing:.02em; }
++.home-envelope-closure { position:absolute; z-index:2; top:calc(54% - 66px); left:calc(50% - 35px); width:70px; height:126px; pointer-events:none; }
++.home-envelope-pocket { min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:end; gap:10px; padding:54px 32px 10px; color:#edeceb; }
+ .home-envelope-pocket .home-print-meta { color:#aab0b7; }
+-.home-envelope-contact a { display:inline-flex; align-items:center; gap:12px; margin-top:8px; color:#f1eeed; font:400 clamp(27px,3.1vw,38px)/1.2 var(--app-font-serif); letter-spacing:-.02em; white-space:nowrap; text-decoration-color:#b9919e; text-underline-offset:6px; }
++.home-envelope-contact a { display:inline-flex; align-items:center; gap:10px; margin-top:6px; color:#f1eeed; font:400 clamp(24px,3.4cqw,36px)/1.2 var(--app-font-serif); letter-spacing:-.02em; white-space:nowrap; text-decoration-color:#b9919e; text-underline-offset:6px; }
+ .home-envelope-contact a span { color:var(--pink); font:16px var(--app-font-sans); }
+ .home-envelope-signoff { text-align:right; }
+-.home-envelope-signoff p { margin:0 0 10px; font:400 30px/1 var(--app-font-serif); letter-spacing:-.025em; }
++.home-envelope-signoff p { margin:0 0 7px; font:400 clamp(22px,3cqw,30px)/1 var(--app-font-serif); letter-spacing:-.025em; }
+ .home-envelope-signoff > span { display:block; color:#aab0b7; font:8px/1.7 var(--app-font-mono); }
+-.home-envelope-footer { grid-column:1/-1; padding-top:16px; border-top:1px solid #494d52; color:#aab0b7; font:8px/1.6 var(--app-font-mono); }
++.home-envelope-footer { grid-column:1/-1; padding-top:10px; border-top:1px solid #494d52; color:#aab0b7; font:8px/1.6 var(--app-font-mono); }
+ @media(hover:hover) and (pointer:fine) {
+  .home-printed-file:hover h3 { color:#aa7889; }
+  .home-printed-file:hover .home-print-open > span { transform:translate(2px,-2px); }
+@@ -53,11 +53,11 @@
+ @media(max-width:760px) {
+  .home-object-label { font-size:8px; gap:12px; }
+  .home-object-label > span:last-child { text-align:right; }
+- .home-printer { margin-top:28px; padding-top:46px; }
++ .home-printer { --print-origin:40px; margin-top:28px; }
+  .home-printer-housing { height:72px; }
+  .home-printer-top { margin:9px 16px 0; font-size:7px; }
+  .home-printer-slot { inset:28px 12px 10px; border-width:2px; }
+- .home-printer-lip { left:11px; right:11px; height:10px; }
++ .home-printer-lip { left:12px; right:12px; }
+  .home-print-window { width:calc(100% - 30px); }
+  .home-print-paper { padding:48px 20px 22px; }
+  .home-print-heading h2 { font-size:42px; }
+@@ -68,12 +68,13 @@
+  .home-print-description { font-size:14px; line-height:1.85; }
+  .home-print-results { font-size:9px; }
+  .home-print-results small { font-size:9px; }
+- .home-envelope-sheet { min-height:254px; padding:24px 18px 62px; border-radius:0 0 34px 34px; }
+- .home-envelope-sheet h2 { font-size:clamp(70px,18vw,92px); margin-top:26px; }
++ .home-envelope { aspect-ratio:auto; grid-template-rows:auto auto; }
++ .home-envelope-sheet { min-height:240px; padding:20px 18px 60px; border-radius:0 0 34px 34px; }
++ .home-envelope-sheet h2 { font-size:clamp(64px,18vw,82px); margin-top:16px; }
+  .home-envelope-subtitle { font-size:9px; }
+  .home-envelope-looking { font-size:8px; max-width:240px; margin:auto; }
+- .home-envelope-closure { top:186px; width:80px; height:144px; left:calc(50% - 40px); }
+- .home-envelope-pocket { min-height:264px; grid-template-columns:minmax(0,1fr); padding:80px 24px 18px; gap:16px; }
++ .home-envelope-closure { top:172px; width:70px; height:126px; left:calc(50% - 35px); }
++ .home-envelope-pocket { grid-template-columns:minmax(0,1fr); padding:60px 24px 16px; gap:16px; }
+  .home-envelope-contact a { font-size:clamp(24px,7vw,30px); }
+  .home-envelope-signoff { text-align:left; }
+  .home-envelope-signoff p { font-size:27px; margin-bottom:8px; }
+@@ -84,20 +85,28 @@
+  .home-print-open > span { transform:none!important; }
+ }
+ 
+-/* Clipping reveals the paper without stretching its type or changing its height. */
+-.home-printer[data-home-reveal="waiting"] .home-print-paper { clip-path:inset(0 0 100%); }
+-.home-printer[data-home-reveal="play"] .home-print-paper { animation:home-print-feed 900ms cubic-bezier(.2,.65,.3,1) both; }
+-.home-printer[data-home-reveal="play"] .home-printed-files li { animation:home-file-appear 350ms ease-out both; }
+-.home-printer[data-home-reveal="play"] .home-printed-files li:nth-child(1) { animation-delay:180ms; }
+-.home-printer[data-home-reveal="play"] .home-printed-files li:nth-child(2) { animation-delay:330ms; }
+-.home-printer[data-home-reveal="play"] .home-printed-files li:nth-child(3) { animation-delay:480ms; }
+-.home-envelope[data-home-reveal="play"] .home-envelope-string { transform-box:fill-box; transform-origin:center; animation:home-string-tighten 520ms ease-out both; }
+-@keyframes home-print-feed { from { clip-path:inset(0 0 100%); } to { clip-path:inset(0 0 0); } }
+-@keyframes home-file-appear { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+-@keyframes home-string-tighten { from { transform:scaleX(1.04); } to { transform:scaleX(1); } }
+-@media(prefers-reduced-motion:reduce) {
+- .home-printer .home-print-paper { clip-path:none!important; animation:none!important; }
+- .home-printer .home-printed-files li,.home-envelope .home-envelope-string { opacity:1!important; transform:none!important; animation:none!important; }
++
++.home-printer-shell { position:absolute; inset:0; z-index:0; border:1px solid #b9bdc0; border-radius:9px 9px 5px 5px; background:linear-gradient(#f2f3f3,#c4c8ca); box-shadow:0 3px 6px #29292b12,inset 0 1px #fff; }
++.home-printer-forehead { position:absolute; top:0; left:1px; right:1px; height:calc(var(--print-origin) - 2px); z-index:4; border-radius:8px 8px 0 0; background:linear-gradient(#f2f3f3,#d8dbdd); }
++.home-printer-control { position:absolute; inset:0 0 auto; z-index:6; height:90px; width:100%; border:0; border-radius:9px 9px 5px 5px; background:transparent; cursor:pointer; }
++.home-printer-control:hover:not(:disabled) { box-shadow:inset 0 0 0 1px var(--pink); }
++.home-printer-control:disabled { cursor:default; }
++.home-printer-control[aria-busy="true"] { cursor:progress; }
++.home-printer-control:focus-visible,.home-print-controls button:focus-visible { outline:2px solid var(--pink); outline-offset:5px; }
++.home-printer.is-printing .home-print-window { transition:height 800ms cubic-bezier(.22,.65,.25,1); }
++.home-print-controls { display:flex; align-items:center; justify-content:space-between; gap:16px; width:calc(100% - 84px); margin:18px auto 0; color:#aa7889; font:9px/1.7 var(--app-font-mono); }
++.home-print-controls p { margin:0; }
++.home-print-controls button { flex-shrink:0; padding:6px 0; border:0; border-bottom:1px solid currentColor; background:none; color:inherit; font:inherit; cursor:pointer; }
++.home-nojs { width:min(100% - 36px,760px); margin:48px auto; }
++@media(max-width:760px) {
++ .home-printer-control { height:72px; }
++ .home-print-controls { width:calc(100% - 30px); font-size:8px; }
+ }
+-.office-motion-reduced .home-printer .home-print-paper { clip-path:none!important; animation:none!important; }
+-.office-motion-reduced .home-printer .home-printed-files li,.office-motion-reduced .home-envelope .home-envelope-string { opacity:1!important; transform:none!important; animation:none!important; }
++@media(prefers-reduced-motion:reduce) { .home-printer.is-printing .home-print-window { transition:none; } }
++.office-motion-reduced .home-printer.is-printing .home-print-window { transition:none; }
++
++.home-nojs h1,.home-nojs h2 { font-family:var(--app-font-serif); font-weight:400; }
++.home-nojs article { padding:24px 0; border-top:1px dashed var(--line); }
++
++.home-nojs h1 { font-size:42px; }
++.home-nojs h2 { font-size:28px; line-height:1.1; }
+diff --git a/artifacts/office026vera-portfolio/src/components/home-office-extension.tsx b/artifacts/office026vera-portfolio/src/components/home-office-extension.tsx
+index 15a935f..1bf4774 100644
+--- a/artifacts/office026vera-portfolio/src/components/home-office-extension.tsx
++++ b/artifacts/office026vera-portfolio/src/components/home-office-extension.tsx
+@@ -1,5 +1,6 @@
+ import { Link } from 'wouter';
+ import { useHomeObjectReveal } from '@/hooks/use-home-object-reveal';
++import { useStagedPrint } from '@/hooks/use-staged-print';
+ import './home-office-extension.css';
+ 
+ const selectedFiles = [
+@@ -21,30 +22,32 @@ function ArchiveClosure() {
+ }
+ 
+ export function HomeOfficeExtension() {
+-  const printRef = useHomeObjectReveal();
++  const print = useStagedPrint();
+   const sealRef = useHomeObjectReveal();
+   return <div className="home-office-extension">
+     <section className="home-selected" aria-labelledby="home-selected-title">
+       <div className="home-object-label"><span>02 / SELECTED WORKS</span><span>THREE FILES · ONE OFFICE</span></div>
+-      <section className="home-printer" ref={printRef} aria-label="打印机输出精选档案">
+-        <div className="home-printer-housing" aria-hidden="true"><div className="home-printer-top"><span>OFFICE026</span><i/></div><div className="home-printer-slot"/><div className="home-printer-lip"/></div>
+-        <div className="home-print-window">
+-          <div className="home-print-paper">
++      <section className={`home-printer${print.busy ? ' is-printing' : ''}`} data-printed-files={print.count} aria-label="打印机输出精选档案">
++        <div className="home-printer-housing" aria-hidden="true"><div className="home-printer-shell"/><div className="home-printer-forehead"/><div className="home-printer-top"><span>OFFICE026</span><i/></div><div className="home-printer-slot"/><div className="home-printer-lip"/></div>
++        <button className="home-printer-control" type="button" onClick={print.printNext} disabled={print.count === 3} aria-disabled={print.busy || print.count === 3} aria-label={print.count === 3 ? '全部三份作品已打印' : `打印下一份作品档案，当前已打印 ${print.count} 份`} aria-controls="home-printed-output" aria-busy={print.busy}/>
++        <div id="home-printed-output" className="home-print-window" ref={print.windowRef} style={{height:print.height}} onTransitionEnd={event=>{if(event.target === event.currentTarget && event.propertyName === 'height') print.unlock();}}>
++          <div className="home-print-paper" ref={print.paperRef}>
+             <header className="home-print-heading"><p className="home-print-meta">OFFICE026VERA / ARCHIVE</p><h2 id="home-selected-title">Selected works</h2><p className="home-print-meta">THREE FILES FROM THE ARCHIVE</p></header>
+-            <ol className="home-printed-files">{selectedFiles.map(file=><li key={file.number}>
++            <ol className="home-printed-files">{selectedFiles.map((file,index)=><li key={file.number} inert={index >= print.count} aria-hidden={index >= print.count}>
+               <Link href={file.href} className="home-printed-file" aria-label={`Open FILE ${file.number} — ${file.title}`}>
+                 <div className="home-print-file-meta"><span>FILE {file.number}</span><span>{file.category}</span></div>
+                 <h3>{file.title}</h3><p className="home-print-zh">{file.zh}</p><p className="home-print-description">{file.description}</p>
+                 <div className="home-print-file-bottom">{file.result?<span className="home-print-results">{file.result}<small>已发布案例的历史表现</small></span>:<span/>}<span className="home-print-open">OPEN FILE <span aria-hidden="true">↗</span></span></div>
+               </Link>
+             </li>)}</ol>
+-            <p className="home-print-end">END OF SELECTED FILES <span>001—003</span></p>
++            <p className="home-print-end" aria-hidden={print.count < 3}>END OF SELECTED FILES <span>001—003</span></p>
+           </div>
+         </div>
++        <div className="home-print-controls"><p role="status">{print.count === 3 ? 'PRINTING COMPLETE' : print.count === 1 ? 'CLICK TO PRINT MORE ↘' : 'PRINT NEXT FILE ↘'}</p>{print.count < 3 && <button type="button" onClick={print.printAll}>PRINT ALL ↗</button>}</div>
+       </section>
+     </section>
+     <section className="home-envelope" ref={sealRef} aria-labelledby="home-thank-you-title">
+-      <div className="home-envelope-sheet"><p className="home-print-meta">OFFICE026VERA / END OF FILE</p><h2 id="home-thank-you-title">Thank <em>You</em></h2><p className="home-envelope-subtitle">FOR VISITING MY OFFICE</p><p className="home-envelope-looking">LOOKING FORWARD TO CONNECTING WITH YOU.</p></div>
++      <div className="home-envelope-sheet"><p className="home-print-meta">OFFICE026VERA / END OF FILE</p><h2 id="home-thank-you-title">Thank You</h2><p className="home-envelope-subtitle">FOR VISITING MY OFFICE</p><p className="home-envelope-looking">LOOKING FORWARD TO CONNECTING WITH YOU.</p></div>
+       <ArchiveClosure/>
+       <div className="home-envelope-pocket">
+         <div className="home-envelope-contact"><p className="home-print-meta">CONTACT</p><a href="mailto:velium0@163.com">velium0@163.com <span aria-hidden="true">↗</span></a></div>
+diff --git a/artifacts/office026vera-portfolio/src/hooks/use-staged-print.ts b/artifacts/office026vera-portfolio/src/hooks/use-staged-print.ts
+new file mode 100644
+index 0000000..23415bf
+--- /dev/null
++++ b/artifacts/office026vera-portfolio/src/hooks/use-staged-print.ts
+@@ -0,0 +1,45 @@
++import { useLayoutEffect, useRef, useState } from 'react';
++
++/** Fully visible until measurement succeeds; only user actions animate height. */
++export function useStagedPrint() {
++  const paperRef = useRef<HTMLDivElement>(null);
++  const windowRef = useRef<HTMLDivElement>(null);
++  const shown = useRef(3);
++  const locked = useRef(false);
++  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
++  const [count, setCount] = useState(3);
++  const [height, setHeight] = useState<number>();
++  const [busy, setBusy] = useState(false);
++  const measure = () => {
++    const paper = paperRef.current;
++    if (!paper) return undefined;
++    const rows = paper.querySelectorAll('li');
++    if (rows.length !== 3) return undefined;
++    return shown.current === 3 ? paper.getBoundingClientRect().height :
++      rows[shown.current - 1].getBoundingClientRect().bottom - paper.getBoundingClientRect().top + parseFloat(getComputedStyle(paper).paddingBottom);
++  };
++  const unlock = () => { clearTimeout(timer.current); locked.current = false; setBusy(false); };
++  const printAll = () => { unlock(); shown.current = 3; setCount(3); setHeight(measure()); };
++  useLayoutEffect(() => {
++    const paper = paperRef.current;
++    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
++    if (!paper || preference.matches || typeof ResizeObserver === 'undefined') return;
++    shown.current = 1;
++    const initial = measure();
++    if (!initial || !Number.isFinite(initial)) { shown.current = 3; return; }
++    setCount(1); setHeight(initial);
++    const observer = new ResizeObserver(() => setHeight(measure()));
++    observer.observe(paper);
++    const onPreference = () => { if (preference.matches) printAll(); };
++    if(preference.addEventListener) preference.addEventListener('change', onPreference);
++    else preference.addListener(onPreference);
++    return () => { observer.disconnect(); if(preference.removeEventListener) preference.removeEventListener('change', onPreference); else preference.removeListener(onPreference); clearTimeout(timer.current); };
++  }, []);
++  const printNext = () => {
++    if (locked.current || shown.current >= 3) return;
++    locked.current = true; setBusy(true);
++    shown.current += 1; setCount(shown.current); setHeight(measure());
++    timer.current = setTimeout(unlock, 950);
++  };
++  return {paperRef, windowRef, count, height, busy, printNext, printAll, unlock};
++}
+diff --git a/artifacts/office026vera-portfolio/src/index.css b/artifacts/office026vera-portfolio/src/index.css
+index 785bbe1..3ee765c 100644
+--- a/artifacts/office026vera-portfolio/src/index.css
++++ b/artifacts/office026vera-portfolio/src/index.css
+@@ -499,6 +499,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
+ }
+ 
+ .home-page {
++  --home-visual-width: 100%;
+   width: min(100% - 112px, 1120px);
+   margin: 0 auto;
+   padding-top: clamp(62px, 8.5vh, 104px);
+@@ -996,10 +997,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
+ }
+ 
+ @media (min-width: 761px) and (max-height: 900px) {
+-  .home-page { padding-top: clamp(28px, 4.5vh, 42px); }
++  .home-page { --home-visual-width: min(100%, 1120px, calc(177.7778dvh - 586.67px)); padding-top: clamp(28px, 4.5vh, 42px); }
+   .home-intro { margin-bottom: clamp(16px, 2.5vh, 24px); }
+   .key-image-frame {
+-    width: min(100%, 1120px, calc(177.7778dvh - 586.67px));
++    width: var(--home-visual-width);
+     margin-inline: auto;
+   }
+   .home-caption { margin-top: 10px; }

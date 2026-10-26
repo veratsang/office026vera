@@ -1,0 +1,1 @@
+- [About badge navigation](about-badge-navigation.md) — Keep each badge, label, and full-card link together; keep all three in one desktop row, not a 2+1 layout.

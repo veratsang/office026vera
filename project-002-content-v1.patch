@@ -1,0 +1,69 @@
+diff --git a/artifacts/office026vera-portfolio/src/pages/projects.css b/artifacts/office026vera-portfolio/src/pages/projects.css
+index cf687d7..1636aef 100644
+--- a/artifacts/office026vera-portfolio/src/pages/projects.css
++++ b/artifacts/office026vera-portfolio/src/pages/projects.css
+@@ -50,3 +50,26 @@
+   .project-metrics { grid-template-columns:minmax(0,1fr); }
+   .project-curriculum-map>div { grid-template-columns:65px minmax(0,1fr); gap:14px; }
+ }
++
++/* PROJECT_002 only: inherit About typography and existing detail chrome. */
++.project-002-facts { display:grid; grid-template-columns:1fr 1fr 2fr; gap:24px; padding:24px 0; border-bottom:1px solid var(--line); }
++.project-002-facts dt { font:9px/1.6 var(--app-font-mono); color:var(--pink); letter-spacing:.06em; margin-bottom:8px; }
++.project-002-facts dd { margin:0; font:12px/1.65 var(--app-font-sans); color:#8b8588; }
++.project-002-strategies { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px 36px; }
++.project-002-strategies article { border-top:1px solid var(--line); padding-top:18px; }
++.project-002-strategies h3 { margin-top:12px; }
++.project-002-workflow { display:flex; flex-wrap:wrap; gap:10px 16px; padding:0 0 18px; margin:0; list-style:none; }
++.project-detail .project-002-workflow li { font:10px/1.8 var(--app-font-mono); color:#8b8588; margin:0; }
++.project-002-workflow li:not(:last-child)::after { content:'→'; padding-left:16px; color:var(--pink); }
++.project-002-evidence { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px; margin-top:26px; align-items:start; max-width:700px; }
++.project-002-evidence figure { max-width:320px; }
++.project-002-case { margin-top:26px; border-top:1px solid var(--line); padding-top:18px; }
++.project-002-case summary { cursor:pointer; font:10px/1.8 var(--app-font-mono); color:var(--pink); padding:6px 0; }
++.project-002-case .project-case-layout { display:block; margin-top:18px; }
++.project-002-case a:focus-visible,.project-002-case summary:focus-visible,.project-002-evidence a:focus-visible { outline:2px solid var(--pink); outline-offset:5px; }
++@media(max-width:760px) {
++  .project-002-facts { grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
++  .project-002-facts>div:last-child { grid-column:1/-1; }
++  .project-002-strategies { grid-template-columns:minmax(0,1fr); gap:24px; }
++  .project-002-evidence { grid-template-columns:minmax(0,1fr); }
++}
+diff --git a/artifacts/office026vera-portfolio/src/pages/projects.tsx b/artifacts/office026vera-portfolio/src/pages/projects.tsx
+index 1602ec5..72a620d 100644
+--- a/artifacts/office026vera-portfolio/src/pages/projects.tsx
++++ b/artifacts/office026vera-portfolio/src/pages/projects.tsx
+@@ -48,8 +48,10 @@ function Metrics({items}:{items:[string,string][]}) {return <dl className="proje
+ export function ProjectDetail({id}:{id:string}) {
+   useEffect(()=>{window.scrollTo({top:0,behavior:'instant'})},[id]);
+   const p=projects.find(p=>p.id===id)!;
++  const title=id==='002'?'Personal Social Media Content Operations':p.title;
++  const subtitle=id==='002'?'个人社交媒体内容运营':p.zh;
+   return <main className="interior-page about-detail project-detail office-file"><div className="about-detail-backline"><Link href="/project/index">← ALL PROJECTS</Link><span>PROJECT_{id}</span></div>
+-    <header className="page-masthead about-detail-masthead"><div><p className="page-eyebrow"><span>03</span>Selected / works</p><h1>{p.title}</h1></div><p className="page-description">{p.zh}</p></header>
++    <header className="page-masthead about-detail-masthead"><div><p className="page-eyebrow"><span>03</span>Selected / works</p><h1>{title}</h1></div><p className="page-description">{subtitle}</p></header>
+     <div className="page-rule"><span>Project / office026vera</span><span>File {id}</span></div>
+     {id==='001'&&<>
+       <Section n="01" title="项目背景"><p className="project-lead">从 0 开始，让内容持续发生。</p><p>负责机构新媒体账号从 0 开始运营。在缺少系统带教的情况下，于较短时间内完成平台熟悉、内容定位和持续更新。</p></Section>
+@@ -57,8 +59,19 @@ export function ProjectDetail({id}:{id:string}) {
+       <Section n="03" title="项目成果"><Metrics items={[["24 条","约 1 个月内发布的视频"],["250 赞 / 178 收藏","小红书 · 单条内容最高"],["113 赞 / 186 转发","微信视频号 · 单条内容最高"]]}/><p className="project-note">两组互动数据分别对应不同平台的单条内容，不合并统计。完成约 1 个月的独立运营后交接账号。</p></Section>
+     </>}
+     {id==='002'&&<>
+-      <Section n="A.01" title="账号整体运营"><div className="project-account-layout"><div><p className="project-lead">把线下经历，转化为值得观看的内容。</p><p>围绕演唱会、快闪店、线下活动等具有视觉和信息价值的场景进行内容创作，将线下经历转化为具有观看价值的短视频。</p><p>根据用户对人物、现场氛围、活动信息及商品细节的关注点确定选题与拍摄重点。针对不同内容选择相应的素材组织方式，独立完成现场素材采集、素材筛选、镜头编排、字幕设计、BGM 选择与画面调整，以及内容发布及评论互动。</p></div><figure><a href={account} target="_blank" rel="noreferrer"><img src={account} alt="个人账号资料截图：49.4K Likes & Saves" loading="lazy"/></a><figcaption>账号整体成果截图 / 点击查看原图</figcaption></figure></div><Metrics items={[["约 13.1 万","单条视频最高播放"],["约 2.85 万","单条视频最高点赞"],["约 4.9 万","账号累计赞藏"]]}/><p className="project-note">账号累计赞藏与单条视频表现为不同统计口径。截图显示累计 49.4K，正文采用约 4.9 万。</p></Section>
+-      <Section n="B" title="Case Study / 单个代表性案例"><div className="project-case-layout"><figure className="project-case-evidence"><a href={evidence} target="_blank" rel="noreferrer"><img src={evidence} alt="代表性内容截图：130799 次播放、28.5K 点赞；图片中播放符号为原截图内容" loading="lazy"/></a><figcaption>单条内容表现 / 静态截图，可点击查看原图</figcaption></figure><div className="project-case-steps"><article><span>01 / AUDIENCE & NEEDS</span><h3>受众与需求</h3><p>以关注相关偶像的粉丝为主要受众，满足其观看线下活动影像、偶像现场表现及展示个人技能的需求。</p></article><article><span>02 / CONTENT STRATEGY</span><h3>内容策略</h3><p>结合 HYBE 当时的宣传趋势与社交媒体内容趋势，基于现场素材选择内容切入点。通过画面取舍、剪辑节奏与封面设计突出视频看点，提升内容吸引力。</p></article><article><span>03 / PRODUCTION & EXECUTION</span><h3>制作执行</h3><ul><li>素材剪辑：精简视频内容，从偶像准备展示个人技能的关键节点切入，减少无效停顿。</li><li>视听呈现：保留现场原声，强化现场感；调整画面尺寸与构图，确保主体清晰。</li><li>发布优化：结合线下活动时效性及时发布，并选择相关标签。</li><li>评论互动：及时回应评论区话题，通过回复与点赞维持互动。</li></ul></article><article><span>04 / RESULTS & REVIEW</span><h3>效果与复盘</h3><Metrics items={[["约 130K","单条视频播放"],["约 28.5K","单条视频点赞"]]}/><ul><li>以现场大屏幕画面为主要素材，突出偶像的个人技能展示。相比距离较远的个人直拍，大屏幕画面更清晰地呈现细节。</li><li>从个人技能展示前的关键节点切入，减少铺垫与停顿。</li><li>调整画面尺寸和方向，改善观看体验。</li><li>及时回应评论区话题，增强内容与粉丝社群的连接。</li></ul></article></div></div><p className="project-note">单案例约 130K 为概数，证据截图显示 130,799 次播放；与账号整体最高约 13.1 万保持不同展示精度。</p></Section>
++      <dl className="project-002-facts"><div><dt>TYPE</dt><dd>Independent Content Practice</dd></div><div><dt>PLATFORM</dt><dd>Xiaohongshu</dd></div><div><dt>ROLE</dt><dd>Content Planning · Video Editing · Publishing</dd></div></dl>
++      <Section n="01" title="Overview"><p>独立运营小红书个人兴趣内容账号，围绕偶像线下活动影像进行短视频创作。</p><p>结合素材表现力、内容时效性与平台趋势，完成视频筛选、剪辑、封面调整、话题标签选择及发布。</p><Metrics items={[["131K","单条视频最高播放量"],["28.5K","单条视频最高点赞量"],["49K","账号累计点赞与收藏"]]}/><p className="project-note">以上为历史内容表现数据，并非实时统计。</p></Section>
++      <Section n="02" title="Content Strategy"><div className="project-002-strategies">
++        <article><span className="about-section-kicker">01 / MATERIAL SELECTION</span><h3>素材筛选</h3><p>比较不同现场影像，优先选择画面清晰、具有表现力和内容看点的片段。</p></article>
++        <article><span className="about-section-kicker">02 / TIMING &amp; AUDIO</span><h3>时效与声音</h3><p>当天发布的视频优先保留现场原声，突出即时性与现场氛围；非当天内容则根据画面情绪与节奏选择合适的背景音乐。</p></article>
++        <article><span className="about-section-kicker">03 / CONTENT PACKAGING</span><h3>内容包装</h3><p>重视封面画面的选择与调整，关注视频清晰度、裁切比例及视觉重点，使内容呈现更清晰、直观。</p></article>
++        <article><span className="about-section-kicker">04 / TRENDS &amp; TAGS</span><h3>趋势与标签</h3><p>参考平台流行内容形式，根据视频主题选择相关话题标签，并结合活动时效性安排发布。</p></article>
++      </div></Section>
++      <Section n="03" title="Execution"><ol className="project-002-workflow" aria-label="内容制作与发布流程">{['FOOTAGE','EDITING','PACKAGING','PUBLISHING'].map(step=><li key={step}>{step}</li>)}</ol><p>从现场素材中筛选片段，完成画面裁剪、剪辑节奏与声音配置，再调整封面和话题标签，最终发布内容。</p></Section>
++      <Section n="04" title="Results"><p>账号粉丝规模相对有限，部分内容获得了较高的播放与互动表现。但由于缺少完整的流量来源及用户画像数据，无法确认非粉丝触达比例或各项内容策略的独立效果。</p><div className="project-002-evidence"><figure><a href={account} target="_blank" rel="noopener noreferrer"><img src={account} alt="个人账号历史资料截图：49.4K Likes & Saves" loading="lazy"/></a><figcaption>账号累计赞藏 / 原图显示 49.4K，快速阅读区采用约 49K。点击查看原图。</figcaption></figure><figure><a href={evidence} target="_blank" rel="noopener noreferrer"><img src={evidence} alt="已发布单条内容历史截图：130,799 次播放、28.5K 点赞" loading="lazy"/></a><figcaption>单条已发布内容 / 130,799 次播放，约 131K；28.5K 点赞。播放图标属于静态截图，点击查看原图。</figcaption></figure></div><p className="project-note">单条视频数据与账号累计赞藏采用不同统计口径。以上数据不对应 About → Skills &amp; Tools 中的 Offline Moments 独立剪辑案例。</p>
++        <details className="project-002-case"><summary>OPEN CASE NOTES / 原有单案例拆解</summary><div className="project-case-layout"><div className="project-case-steps"><article><span>01 / AUDIENCE & NEEDS</span><h3>受众与需求</h3><p>以关注相关偶像的粉丝为主要受众，满足其观看线下活动影像、偶像现场表现及展示个人技能的需求。</p></article><article><span>02 / CONTENT STRATEGY</span><h3>内容策略</h3><p>结合 HYBE 当时的宣传趋势与社交媒体内容趋势，基于现场素材选择内容切入点。通过画面取舍、剪辑节奏与封面设计突出视频看点，提升内容吸引力。</p></article><article><span>03 / PRODUCTION & EXECUTION</span><h3>制作执行</h3><ul><li>素材剪辑：精简视频内容，从偶像准备展示个人技能的关键节点切入，减少无效停顿。</li><li>视听呈现：保留现场原声，强化现场感；调整画面尺寸与构图，确保主体清晰。</li><li>发布优化：结合线下活动时效性及时发布，并选择相关标签。</li><li>评论互动：及时回应评论区话题，通过回复与点赞维持互动。</li></ul></article><article><span>04 / RESULTS & REVIEW</span><h3>效果与复盘</h3><Metrics items={[["约 131K","单条视频播放"],["约 28.5K","单条视频点赞"]]}/><ul><li>以现场大屏幕画面为主要素材，突出偶像的个人技能展示。相比距离较远的个人直拍，大屏幕画面更清晰地呈现细节。</li><li>从个人技能展示前的关键节点切入，减少铺垫与停顿。</li><li>调整画面尺寸和方向，改善观看体验。</li><li>及时回应评论区话题，增强内容与粉丝社群的连接。</li></ul></article></div></div><p className="project-note">单案例约 131K 为概数，证据截图显示 130,799 次播放；131K 为对该截图播放量的近似展示；截图点赞量为 28.5K。</p></details>
++      </Section>
++      <Section n="05" title="Reflection"><h3>Content Presentation Matters</h3><p>在运营实践中，我逐渐形成了结合素材质量、内容时效性、封面表现、声音配置与平台趋势进行内容判断的工作方法。</p><p>由于缺少系统化的数据记录，目前难以量化不同因素对传播结果的贡献。</p><p>未来若重新运营，我会建立内容表现记录表，持续记录发布时间、封面类型、视频长度、声音策略、话题标签与互动数据，并在可比条件下进行分析，逐步提高内容决策的可验证性。</p></Section>
+     </>}
+     {id==='003'&&<>
+       <Section n="01" title="项目背景"><p className="project-lead">让课程结构可见，让教学经验得以衔接。</p><p>探索如何将不同阶段、不同类别的美术课程组织成易于教学和理解的体系。在保留各类课程自身教学逻辑的基础上，建立清晰、连贯且便于交接的课程体系，降低课程对单一教师个人经验的依赖，保障教学工作的连续性。</p></Section>

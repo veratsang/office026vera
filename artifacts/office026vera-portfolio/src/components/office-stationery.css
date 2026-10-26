@@ -1,0 +1,23 @@
+/* Decoration only: existing grids, text, routes and click targets stay intact. */
+.office-object,.office-note { pointer-events:none; user-select:none; }
+.office-object { display:block; height:auto; }
+.office-about-paperclip { position:absolute; z-index:2; height:40px; width:auto; left:24%; top:32%; transform:rotate(-11deg); }
+.office-project-heading { position:relative; }
+.office-project-binder { position:absolute; width:44px; right:12px; top:-13px; transform:rotate(8deg); }
+.office-research-masthead { position:relative; }
+.office-research-paper { position:absolute; width:68px; top:30px; right:14px; transform:rotate(5deg); }
+.office-note { position:absolute; width:80px; right:8px; top:24px; transform:rotate(-5deg); }
+.office-note-004 { transform:rotate(4deg); right:12px; }
+.office-note > img { display:block; width:100%; height:auto; }
+.office-note-copy { position:absolute; left:8%; right:8%; top:37%; display:flex; flex-direction:column; align-items:center; gap:6px; color:#424b56; font:8px/1.4 var(--app-font-mono); text-align:center; }
+.office-lab-index-entry { position:relative; }
+.office-lab-index-entry .about-capability-content { padding-right:112px; }
+@media(max-width:760px) {
+ .office-about-paperclip { height:24px; }
+ .office-project-binder { width:32px; right:2px; top:-10px; }
+ .office-research-paper { display:none; }
+ .office-note { width:66px; right:0; top:20px; }
+ .office-note-004 { right:2px; }
+ .office-note-copy { font-size:7px; gap:5px; }
+ .office-lab-index-entry .about-capability-content { padding-right:78px; }
+}
